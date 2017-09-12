@@ -51,4 +51,5 @@ try! dbQueue.inDatabase { db in
     try player.insert(db)
     
     try print(Player.filter(Player.Columns.id == 1).fetchOne(db)!.name)
+//    try print(Player.filter(Player.Columns.score >= 1000).fetchOne(db)!.name)
 }
