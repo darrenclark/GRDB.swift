@@ -2,15 +2,9 @@ public struct TypedColumn<Root, Value> {
     public let column: Column
     let keyPath: KeyPath<Root, Value>
     
-    init(column: Column, keyPath: KeyPath<Root, Value>) {
-        self.column = column
+    public init(_ name: String, _ keyPath: KeyPath<Root, Value>) {
+        self.column = Column(name)
         self.keyPath = keyPath
-    }
-}
-
-extension Column {
-    public func with<Root, Value>(keyPath: KeyPath<Root, Value>) -> TypedColumn<Root, Value> {
-        return TypedColumn(column: self, keyPath: keyPath)
     }
 }
 

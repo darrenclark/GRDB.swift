@@ -308,55 +308,37 @@ public func > <E>(lhs: E.SQLValueType._Wrapped, rhs: E) -> AnyTypedExpression<Bo
 }
 
 
-public func && <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool, R.SQLValueType == Bool {
-    return AnyTypedExpression(lhs.sqlExpression && rhs.sqlExpression)
-}
-
+//public func && <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool, R.SQLValueType == Bool {
+//    return AnyTypedExpression(lhs.sqlExpression && rhs.sqlExpression)
+//}
+//
 public func && <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool?> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool?, R.SQLValueType == Bool {
     return AnyTypedExpression(lhs.sqlExpression && rhs.sqlExpression)
 }
-
-public func && <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool?> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool, R.SQLValueType == Bool? {
-    return AnyTypedExpression(lhs.sqlExpression && rhs.sqlExpression)
-}
-
-public func && <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool?> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool?, R.SQLValueType == Bool? {
-    return AnyTypedExpression(lhs.sqlExpression && rhs.sqlExpression)
-}
-
-public func && <E>(lhs: E, rhs: Bool) -> AnyTypedExpression<Bool> where E: SQLTypedExpression, E.SQLValueType == Bool {
-    return AnyTypedExpression(rhs ? lhs.sqlExpression : false.databaseValue.sqlExpression)
-}
-
-public func && <E>(lhs: Bool, rhs: E) -> AnyTypedExpression<Bool> where E: SQLTypedExpression, E.SQLValueType == Bool {
-    return AnyTypedExpression(lhs ? rhs.sqlExpression : false.databaseValue.sqlExpression)
-}
-
-
-public func || <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool, R.SQLValueType == Bool {
-    return AnyTypedExpression(lhs.sqlExpression || rhs.sqlExpression)
-}
-
-public func || <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool?> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool?, R.SQLValueType == Bool {
-    return AnyTypedExpression(lhs.sqlExpression || rhs.sqlExpression)
-}
-
-public func || <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool?> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool, R.SQLValueType == Bool? {
-    return AnyTypedExpression(lhs.sqlExpression || rhs.sqlExpression)
-}
-
-public func || <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool?> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool?, R.SQLValueType == Bool? {
-    return AnyTypedExpression(lhs.sqlExpression || rhs.sqlExpression)
-}
-
-public func || <E>(lhs: E, rhs: Bool) -> AnyTypedExpression<Bool> where E: SQLTypedExpression, E.SQLValueType == Bool {
-    return AnyTypedExpression(rhs ? true.databaseValue.sqlExpression : lhs.sqlExpression)
-}
-
-public func || <E>(lhs: Bool, rhs: E) -> AnyTypedExpression<Bool> where E: SQLTypedExpression, E.SQLValueType == Bool {
-    return AnyTypedExpression(lhs ? true.databaseValue.sqlExpression : rhs.sqlExpression)
-}
-
+//
+//public func && <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool?> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool, R.SQLValueType == Bool? {
+//    return AnyTypedExpression(lhs.sqlExpression && rhs.sqlExpression)
+//}
+//
+//public func && <L, R>(lhs: L, rhs: R) -> AnyTypedExpression<Bool?> where L: SQLTypedExpression, R: SQLTypedExpression, L.SQLValueType == Bool?, R.SQLValueType == Bool? {
+//    return AnyTypedExpression(lhs.sqlExpression && rhs.sqlExpression)
+//}
+//
+//public func && <E>(lhs: E, rhs: Bool) -> AnyTypedExpression<Bool?> where E: SQLTypedExpression, E.SQLValueType == Bool? {
+//    return AnyTypedExpression(lhs.sqlExpression && rhs.databaseValue.sqlExpression)
+//}
+//
+//public func && <E>(lhs: Bool, rhs: E) -> AnyTypedExpression<Bool?> where E: SQLTypedExpression, E.SQLValueType == Bool? {
+//    return AnyTypedExpression(lhs.databaseValue.sqlExpression && rhs.sqlExpression)
+//}
+//
+//public func && <E>(lhs: E, rhs: Bool) -> AnyTypedExpression<Bool> where E: SQLTypedExpression, E.SQLValueType == Bool {
+//    return AnyTypedExpression(rhs ? lhs.sqlExpression : false.databaseValue.sqlExpression)
+//}
+//
+//public func && <E>(lhs: Bool, rhs: E) -> AnyTypedExpression<Bool> where E: SQLTypedExpression, E.SQLValueType == Bool {
+//    return AnyTypedExpression(lhs ? rhs.sqlExpression : false.databaseValue.sqlExpression)
+//}
 
 
 func f(_ db: Database) throws {
@@ -368,9 +350,9 @@ func f(_ db: Database) throws {
         // GRDB
         
         enum Columns {
-            static let id = Column("id").with(keyPath: \Player.id)
-            static let name = Column("name").with(keyPath: \Player.name)
-            static let score = Column("score").with(keyPath: \Player.score)
+            static let id = TypedColumn("id", \Player.id)
+            static let name = TypedColumn("name", \Player.name)
+            static let score = TypedColumn("score", \Player.score)
         }
         
         static var databaseTableName = "players"
@@ -395,7 +377,9 @@ func f(_ db: Database) throws {
     let x = Player.Columns.id == 1
     let y = Player.Columns.score > 1000
     let z = x && y
-//    let x = ((Player.Columns.id == 1) && (Player.Columns.score > 1000))
+//    let c = ((Player.Columns.id == 1) && true)
+//    let d = (true && Player.Columns.score > 1000)
+    let e: AnyTypedExpression<Bool?> = ((Player.Columns.id == 1) && (Player.Columns.score > 1000))
     _ = try Player.select((Player.Columns.id == 1) && (Player.Columns.score > 1000)).fetchOne(db)
     
     _ = try Player.select(Player.Columns.id).fetchOne(db)
