@@ -1,6 +1,6 @@
 // To run this playground, select and build the GRDBOSX scheme.
 
-import GRDB
+@testable import GRDB
 
 
 var configuration = Configuration()
@@ -50,6 +50,35 @@ try! dbQueue.inDatabase { db in
     var player = Player(row: ["id": 1, "name": "Arthur", "score": 1000])
     try player.insert(db)
     
-    try print(Player.filter(Player.Columns.id == 1).fetchOne(db)!.name)
-//    try print(Player.filter(Player.Columns.score >= 1000).fetchOne(db)!.name)
+    _ = try Player.select((Player.Columns.id == 1) && Player.Columns.score > 1000).fetchOne(db)
+//    _ = try Player.select(Player.Columns.id).fetchOne(db)
+//    _ = try Player.order(Player.Columns.id).fetchOne(db)
+//    _ = try Player.filter(1 == Player.Columns.id).fetchOne(db)
+//    _ = try Player.filter(AnyTypedExpression<Int64>(sqlExpression: 1.databaseValue) == Player.Columns.id).fetchOne(db)
+//    _ = try Player.filter(AnyTypedExpression<Int64?>(sqlExpression: 1.databaseValue) == Player.Columns.id).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.id == AnyTypedExpression<Int64>(sqlExpression: 1.databaseValue)).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.id == AnyTypedExpression<Int64?>(sqlExpression: 1.databaseValue)).fetchOne(db)
+//    _ = try Player.filter(nil == Player.Columns.id).fetchOne(db)
+//    _ = try Player.filter(AnyTypedExpression<Int64>(sqlExpression: DatabaseValue.null) == Player.Columns.id).fetchOne(db)
+//    _ = try Player.filter(AnyTypedExpression<Int64?>(sqlExpression: DatabaseValue.null) == Player.Columns.id).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.id == nil).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.id == AnyTypedExpression<Int64>(sqlExpression: DatabaseValue.null)).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.id == AnyTypedExpression<Int64?>(sqlExpression: DatabaseValue.null)).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.id == Player.Columns.id).fetchOne(db)
+//
+//    _ = try Player.select(Player.Columns.score).fetchOne(db)
+//    _ = try Player.order(Player.Columns.score).fetchOne(db)
+//    _ = try Player.filter(1 == Player.Columns.score).fetchOne(db)
+//    _ = try Player.filter(AnyTypedExpression<Int>(sqlExpression: 1.databaseValue) == Player.Columns.score).fetchOne(db)
+//    _ = try Player.filter(AnyTypedExpression<Int?>(sqlExpression: 1.databaseValue) == Player.Columns.score).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.score == AnyTypedExpression<Int>(sqlExpression: 1.databaseValue)).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.score == AnyTypedExpression<Int?>(sqlExpression: 1.databaseValue)).fetchOne(db)
+//    _ = try Player.filter(AnyTypedExpression<Int>(sqlExpression: DatabaseValue.null) == Player.Columns.score).fetchOne(db)
+//    _ = try Player.filter(AnyTypedExpression<Int?>(sqlExpression: DatabaseValue.null) == Player.Columns.score).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.score == AnyTypedExpression<Int>(sqlExpression: DatabaseValue.null)).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.score == AnyTypedExpression<Int?>(sqlExpression: DatabaseValue.null)).fetchOne(db)
+//    _ = try Player.filter(Player.Columns.score == Player.Columns.score).fetchOne(db)
+    
+//    try Player.filter(Player.Columns.id == Player.Columns.score).fetchOne(db)
+//    try Player.filter(Player.Columns.score >= 1000).fetchOne(db)
 }
