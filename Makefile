@@ -48,12 +48,9 @@ MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 4s,OS=8.1"
 
 ifeq ($(XCODEVERSION),9.0)
   # xcodebuild destination to run tests on latest iOS (Xcode 9.0)
-  MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 7,OS=11.0"
-else ifeq ($(XCODEVERSION),8.3)
-  # xcodebuild destination to run tests on latest iOS (Xcode 8.3.3)
-  MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 7,OS=10.3.1"
+  MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 8,OS=11.0"
 else
-  # Xcode < 8.3 is not supported
+  # Xcode < 9.0 is not supported
 endif
 
 # If xcpretty is available, use it for xcodebuild output
@@ -236,10 +233,10 @@ test_performance: Realm FMDB SQLite.swift
 	  -scheme GRDBOSXPerformanceTests \
 	  build-for-testing test-without-building
 
-Realm: Tests/Performance/Realm/build/osx/swift-3.1/RealmSwift.framework
+Realm: Tests/Performance/Realm/build/osx/swift-4/RealmSwift.framework
 
 # Makes sure the Tests/Performance/Realm submodule has been downloaded, and Realm framework has been built.
-Tests/Performance/Realm/build/osx/swift-3.1/RealmSwift.framework:
+Tests/Performance/Realm/build/osx/swift-4/RealmSwift.framework:
 	$(GIT) submodule update --init --recursive Tests/Performance/Realm
 	cd Tests/Performance/Realm && sh build.sh osx-swift
 
@@ -304,16 +301,13 @@ endif
 # =======
 
 distclean:
-	( if [ -a .build ] && [ -a Package.resolved ]; then $(SWIFT) package reset; fi )
-	cd Tests/SPM && ( if  [ -a .build ] && [ -a Package.resolved ]; then $(SWIFT) package reset; fi )
-	rm -rf Documentation/Reference
+	$(GIT) reset --hard
+	$(GIT) clean -dffx .
 	rm -rf Tests/Performance/fmdb && $(GIT) checkout -- Tests/Performance/fmdb
 	rm -rf Tests/Performance/SQLite.swift && $(GIT) checkout -- Tests/Performance/SQLite.swift
 	rm -rf Tests/Performance/Realm && $(GIT) checkout -- Tests/Performance/Realm
 	rm -rf SQLCipher/src && $(GIT) checkout -- SQLCipher/src
 	rm -rf SQLiteCustom/src && $(GIT) checkout -- SQLiteCustom/src
-	find . -name xcuserdata | xargs rm -rf
-	find . -name Package.resolved | xargs rm -f
 
 clean:
 	$(SWIFT) package reset
