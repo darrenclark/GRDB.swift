@@ -401,6 +401,9 @@ public final class Database {
                 
                 if let passphrase = configuration.passphrase {
                     try Database.set(passphrase: passphrase, forConnection: sqliteConnection!)
+                    if let cipher = configuration.cipher {
+                        try Database.set(cipher: cipher, forConnection: sqliteConnection!)
+                    }
                 }
             #endif
             
@@ -1026,6 +1029,32 @@ extension Database {
         }
     }
 
+    private class func set(cipher: String, forConnection sqliteConnection: SQLiteConnection) throws {
+        // References:s
+        // - https://www.zetetic.net/sqlcipher/sqlcipher-api/#cipher
+        // - https://discuss.zetetic.net/t/pragma-cipher-command-is-deprecated-please-remove-from-usage/1766
+        do {
+            // Apply cipher
+            var sqliteStatement: SQLiteStatement? = nil
+            let code = sqlite3_prepare_v2(sqliteConnection, "PRAGMA cipher = \(cipher.databaseValue.sql)", -1, &sqliteStatement, nil)
+            guard code == SQLITE_OK else { throw DatabaseError(resultCode: code, message: String(cString: sqlite3_errmsg(sqliteConnection))) }
+            sqlite3_step(sqliteStatement)
+            sqlite3_finalize(sqliteStatement)
+        }
+        do {
+            // Check that cipher is actually in use
+            var sqliteStatement: SQLiteStatement? = nil
+            let code = sqlite3_prepare_v2(sqliteConnection, "PRAGMA cipher", -1, &sqliteStatement, nil)
+            guard code == SQLITE_OK else { throw DatabaseError(resultCode: code, message: String(cString: sqlite3_errmsg(sqliteConnection))) }
+            sqlite3_step(sqliteStatement)
+            let usedCipher = String(cString: sqlite3_column_text(sqliteStatement, 0)!)
+            sqlite3_finalize(sqliteStatement)
+            guard cipher == usedCipher else {
+                throw DatabaseError(message: "Cipher mismatch: \(String(reflecting: cipher)) requested, \(String(reflecting: usedCipher)) actually in use.")
+            }
+        }
+    }
+    
     func change(passphrase: String) throws {
         // FIXME: sqlite3_rekey is discouraged.
         //

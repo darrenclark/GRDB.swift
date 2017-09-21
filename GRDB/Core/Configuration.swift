@@ -31,8 +31,13 @@ public struct Configuration {
     #if SQLITE_HAS_CODEC
     /// The passphrase for encrypted database.
     ///
-    /// Default: nil
+    /// Default: nil (database is not encrypted)
     public var passphrase: String?
+    
+    /// The cipher used for encryption.
+    ///
+    /// Default: nil (database is encrypted with the default cipher)
+    public var cipher: String?
     #endif
     
     

@@ -376,5 +376,15 @@ class EncryptionTests: GRDBTestCase {
             }
         }
     }
+    
+    func testDatabaseQueueCustomCipher() throws {
+        dbConfiguration.passphrase = "secret"
+        dbConfiguration.cipher = "aes-256-gcm"
+        let dbQueue = try makeDatabaseQueue()
+        try dbQueue.inDatabase { db in
+            let cipher = try String.fetchOne(db, "PRAGMA cipher")
+            XCTAssertEqual(cipher, dbConfiguration.cipher)
+        }
+    }
 }
 #endif
