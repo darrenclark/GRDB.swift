@@ -13,10 +13,34 @@
     - [ ] CASE x WHEN w1 THEN r1 WHEN w2 THEN r2 ELSE r3 END https://www.sqlite.org/lang_expr.html
 - [ ] Write regression tests for #156 and #157
 
-GRDB 2.0
+Associations
 
-- [ ] Document Record.updateChanges(_:)
-- [ ] WIP on diff algorithms in RxGRDB needs access to MutablePersistable.databaseDictionary. The problem is that one should not need a writing protocol just to read. So consider introducing a new DatabaseEncodable protocol above MutablePersistable. It does not grant any writing methods. But it has encode(to:) and databaseDictionary.
+- [ ] has_many :through
+- [ ] has_one :through
+- [ ] has_and_belongs_to_many
+- [ ] Recursive associations (A -> A, and A -> B, B -> A)
+- [ ] .order(annotation.count) -> this one will probably need SQL ordering
+- [ ] FTS4/5 External Content Full-Text Tables
+- [ ] Author.deleteAll(Author.books)
+- [ ] Refactor requests so that:
+    - [ ] `including` always means that values are co-fetched, regardless of the association:
+    
+        - Country.all().including(Country.citizens) // (Country, [Citizen])
+        - Child.all().including(Child.parent)       // (Child, Parent)
+
+    The goal is that the method does not reflect the SQL, but the effect: here, all associated models are fetched along
+
+    - [ ] to-one associations declare the optionality of the associated model
+
+        - Child.all().including(Child.parent)         // (Child, Parent)
+        - Child.all().including(Child.optionalParent) // (Child, Parent?)
+
+    The goal is to have optionality declared right away, as a reminder of the database schema.
+- [ ] `belongs(to:)`, `belongs(toOptional:)`, `has(one:)`, `has(oneOptional:)`, `has(many:)`
+- [ ] Remove the tuple names in results fetched from JoinedPair: `(left: X, right: Y)` -> `(X, Y)`
+- [ ] Consider removing the `record.request(_:)` method for to-one associations. `fetchOne` looks enough.
+- [ ] Turning a non-optional to an optional association. Use case: derive `belongsTo(optional: Author.self).filter(Column("isDead"))` from `belongsTo(Author.self)`
+- [ ] Turning an optional to a non-optional association. For example: `Book.including(mandatory: Book.belongsTo(optional: Author.self).filter(Column("gender") == "female")).fetchAll(db) => [(Book, Author)]`
 
 Not sure
 
