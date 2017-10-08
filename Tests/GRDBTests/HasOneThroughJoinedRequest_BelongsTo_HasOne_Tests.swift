@@ -22,7 +22,12 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                 .joined(with: Book.libraryAddress)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\")")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "books".* \
+                FROM "books" \
+                LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id")
+                """)
             
             assertMatch(graph, [
                 ["isbn": "book1", "title": "Moby-Dick", "libraryId": nil],
@@ -49,7 +54,13 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .joined(with: Book.libraryAddress)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"books\".\"title\" <> \'Walden\')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id") \
+                    WHERE ("books"."title" <> 'Walden')
+                    """)
                 
                 assertMatch(graph, [
                     ["isbn": "book1", "title": "Moby-Dick", "libraryId": nil],
@@ -69,7 +80,13 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .filter(Column("title") != "Walden")
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"books\".\"title\" <> \'Walden\')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id") \
+                    WHERE ("books"."title" <> 'Walden')
+                    """)
                 
                 assertMatch(graph, [
                     ["isbn": "book1", "title": "Moby-Dick", "libraryId": nil],
@@ -89,7 +106,13 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .joined(with: Book.libraryAddress)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\") ORDER BY \"books\".\"title\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id") \
+                    ORDER BY "books"."title" DESC
+                    """)
                 
                 assertMatch(graph, [
                     ["isbn": "book3", "title": "Walden", "libraryId": 1],
@@ -110,7 +133,13 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .order(Column("title").desc)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\") ORDER BY \"books\".\"title\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id") \
+                    ORDER BY "books"."title" DESC
+                    """)
                 
                 assertMatch(graph, [
                     ["isbn": "book3", "title": "Walden", "libraryId": 1],
@@ -138,7 +167,12 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .joined(with: association)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"name\" <> \'Secret Library\')) LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\")")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."name" <> 'Secret Library')) \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id")
+                    """)
                 
                 // TODO: is it expected to have books of the secret library here?
                 // TODO: how to get books that are not in the secret library?
@@ -161,7 +195,12 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .joined(with: association)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\")")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id")
+                    """)
                 
                 assertMatch(graph, [
                     ["isbn": "book1", "title": "Moby-Dick", "libraryId": nil],
@@ -187,7 +226,12 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .joined(with: Book.libraryAddress.filter(Column("city") != "Paris"))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON ((\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\") AND (\"libraryAddresses\".\"city\" <> \'Paris\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON (("libraryAddresses"."libraryId" = "libraries"."id") AND ("libraryAddresses"."city" <> 'Paris'))
+                    """)
                 
                 // TODO: is it expected to have books in Paris here?
                 // TODO: how to get books that are not in Paris?
@@ -208,7 +252,12 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .joined(with: Book.libraryAddress.order(Column("city").desc))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\")")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id")
+                    """)
                 
                 assertMatch(graph, [
                     ["isbn": "book1", "title": "Moby-Dick", "libraryId": nil],
@@ -240,11 +289,16 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
         
         try dbQueue.inDatabase { db in
             do {
-                let middleAssociation = Person.belongsTo(Person.self, from: "parentId")
-                let rightAssociation = Person.hasOne(Person.self, from: "childId")
+                let middleAssociation = Person.belongsTo(Person.self, foreignKey: ["parentId"])
+                let rightAssociation = Person.hasOne(Person.self, foreignKey: ["childId"])
                 let association = Person.hasOne(rightAssociation, through: middleAssociation)
                 let request = Person.joined(with: association)
-                try assertEqualSQL(db, request, "SELECT \"persons1\".* FROM \"persons\" \"persons1\" LEFT JOIN \"persons\" \"persons2\" ON (\"persons2\".\"id\" = \"persons1\".\"parentId\") LEFT JOIN \"persons\" \"persons3\" ON (\"persons3\".\"childId\" = \"persons2\".\"id\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "persons1".* \
+                    FROM "persons" "persons1" \
+                    LEFT JOIN "persons" "persons2" ON ("persons2"."id" = "persons1"."parentId") \
+                    LEFT JOIN "persons" "persons3" ON ("persons3"."childId" = "persons2"."id")
+                    """)
             }
         }
     }
@@ -260,7 +314,13 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .aliased("c")
                     .filter(Column("title") != "Walden")
                     .joined(with: Book.libraryAddress)
-                try assertEqualSQL(db, request, "SELECT \"c\".* FROM \"books\" \"c\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"c\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"c\".\"title\" <> 'Walden')")
+                try assertEqualSQL(db, request, """
+                    SELECT "c".* \
+                    FROM "books" "c" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "c"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id") \
+                    WHERE ("c"."title" <> 'Walden')
+                    """)
             }
             
             do {
@@ -269,7 +329,13 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                     .filter(Column("title") != "Walden")
                     .joined(with: Book.libraryAddress)
                     .aliased("c")
-                try assertEqualSQL(db, request, "SELECT \"c\".* FROM \"books\" \"c\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"c\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"c\".\"title\" <> 'Walden')")
+                try assertEqualSQL(db, request, """
+                    SELECT "c".* \
+                    FROM "books" "c" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "c"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id") \
+                    WHERE ("c"."title" <> 'Walden')
+                    """)
             }
             
             do {
@@ -277,7 +343,12 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                 let request = Book.all()
                     .aliased("books")
                     .joined(with: Book.libraryAddress)
-                try assertEqualSQL(db, request, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id")
+                    """)
             }
         }
     }
@@ -290,13 +361,23 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
             do {
                 let association = Book.hasOne(Library.address, through: Book.library.aliased("a"))
                 let request = Book.joined(with: association)
-                try assertEqualSQL(db, request, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" \"a\" ON (\"a\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"a\".\"id\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" "a" ON ("a"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "a"."id")
+                    """)
             }
             do {
                 // alias with table name
                 let association = Book.hasOne(Library.address, through: Book.library.aliased("libraries"))
                 let request = Book.joined(with: association)
-                try assertEqualSQL(db, request, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id")
+                    """)
             }
         }
     }
@@ -313,7 +394,13 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                         .aliased("a")
                         .filter(Column("city") != "Paris"))
                     .order(Column("city").from("a").desc)
-                try assertEqualSQL(db, request, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" \"a\" ON ((\"a\".\"libraryId\" = \"libraries\".\"id\") AND (\"a\".\"city\" <> \'Paris\')) ORDER BY \"a\".\"city\" DESC")
+                try assertEqualSQL(db, request, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" "a" ON (("a"."libraryId" = "libraries"."id") AND ("a"."city" <> 'Paris')) \
+                    ORDER BY "a"."city" DESC
+                    """)
             }
             
             do {
@@ -323,13 +410,24 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
                         .order(Column("city").desc)
                         .aliased("a"))
                     .filter(Column("city").from("a") != "Paris")
-                try assertEqualSQL(db, request, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" \"a\" ON (\"a\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"a\".\"city\" <> \'Paris\')")
+                try assertEqualSQL(db, request, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" "a" ON ("a"."libraryId" = "libraries"."id") \
+                    WHERE ("a"."city" <> 'Paris')
+                    """)
             }
             
             do {
                 // alias with table name (TODO: port this test to all testRightAlias() tests)
                 let request = Book.joined(with: Book.libraryAddress.aliased("libraryAddresses"))
-                try assertEqualSQL(db, request, "SELECT \"books\".* FROM \"books\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books\".\"libraryId\") LEFT JOIN \"libraryAddresses\" ON (\"libraryAddresses\".\"libraryId\" = \"libraries\".\"id\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books"."libraryId") \
+                    LEFT JOIN "libraryAddresses" ON ("libraryAddresses"."libraryId" = "libraries"."id")
+                    """)
             }
             
         }
@@ -343,13 +441,23 @@ class HasOneThroughJoinedRequest_BelongsTo_HasOne_Tests: GRDBTestCase {
             do {
                 // alias left
                 let request = Book.joined(with: Book.libraryAddress).aliased("LIBRARYADDRESSES")
-                try assertEqualSQL(db, request, "SELECT \"LIBRARYADDRESSES\".* FROM \"books\" \"LIBRARYADDRESSES\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"LIBRARYADDRESSES\".\"libraryId\") LEFT JOIN \"libraryAddresses\" \"libraryAddresses1\" ON (\"libraryAddresses1\".\"libraryId\" = \"libraries\".\"id\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "LIBRARYADDRESSES".* \
+                    FROM "books" "LIBRARYADDRESSES" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "LIBRARYADDRESSES"."libraryId") \
+                    LEFT JOIN "libraryAddresses" "libraryAddresses1" ON ("libraryAddresses1"."libraryId" = "libraries"."id")
+                    """)
             }
             
             do {
                 // alias right
                 let request = Book.joined(with: Book.libraryAddress.aliased("BOOKS"))
-                try assertEqualSQL(db, request, "SELECT \"books1\".* FROM \"books\" \"books1\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"books1\".\"libraryId\") LEFT JOIN \"libraryAddresses\" \"BOOKS\" ON (\"BOOKS\".\"libraryId\" = \"libraries\".\"id\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "books1".* \
+                    FROM "books" "books1" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "books1"."libraryId") \
+                    LEFT JOIN "libraryAddresses" "BOOKS" ON ("BOOKS\"."libraryId" = "libraries"."id")
+                    """)
             }
         }
     }

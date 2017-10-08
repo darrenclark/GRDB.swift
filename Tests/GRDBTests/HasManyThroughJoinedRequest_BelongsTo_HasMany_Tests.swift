@@ -23,7 +23,12 @@ class HasManyThroughJoinedRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 .joined(with: Reader.books)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, \"books\".* FROM \"readers\" JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\")")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "readers".*, "books".* \
+                FROM "readers" \
+                JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                JOIN "books" ON ("books"."libraryId" = "libraries"."id")
+                """)
             
             assertMatch(graph, [
                 (["email": "barbara@example.com", "libraryId": 1], ["isbn": "book2", "title": "The Fellowship of the Ring", "libraryId": 1]),
@@ -49,7 +54,13 @@ class HasManyThroughJoinedRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .joined(with: Reader.books)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, \"books\".* FROM \"readers\" JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"readers\".\"email\" <> \'barbara@example.com\')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, "books".* \
+                    FROM "readers" \
+                    JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    WHERE ("readers"."email" <> 'barbara@example.com')
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "craig@example.com", "libraryId": 2], ["isbn": "book5", "title": "Querelle de Brest", "libraryId": 2]),
@@ -66,7 +77,13 @@ class HasManyThroughJoinedRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .filter(Column("email") != "barbara@example.com")
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, \"books\".* FROM \"readers\" JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"readers\".\"email\" <> \'barbara@example.com\')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, "books".* \
+                    FROM "readers" \
+                    JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    WHERE ("readers"."email" <> 'barbara@example.com')
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "craig@example.com", "libraryId": 2], ["isbn": "book5", "title": "Querelle de Brest", "libraryId": 2]),
@@ -83,7 +100,13 @@ class HasManyThroughJoinedRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .joined(with: Reader.books)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, \"books\".* FROM \"readers\" JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") ORDER BY \"readers\".\"email\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, "books".* \
+                    FROM "readers" \
+                    JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    ORDER BY "readers"."email" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "david@example.com", "libraryId": 2], ["isbn": "book5", "title": "Querelle de Brest", "libraryId": 2]),
@@ -103,7 +126,13 @@ class HasManyThroughJoinedRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .order(Column("email").desc)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, \"books\".* FROM \"readers\" JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") ORDER BY \"readers\".\"email\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, "books".* \
+                    FROM "readers" \
+                    JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    ORDER BY "readers"."email" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "david@example.com", "libraryId": 2], ["isbn": "book5", "title": "Querelle de Brest", "libraryId": 2]),
@@ -129,7 +158,12 @@ class HasManyThroughJoinedRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .joined(with: Reader.books.filter(Column("title") != "Walden"))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, \"books\".* FROM \"readers\" JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") JOIN \"books\" ON ((\"books\".\"libraryId\" = \"libraries\".\"id\") AND (\"books\".\"title\" <> \'Walden\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, "books".* \
+                    FROM "readers" \
+                    JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    JOIN "books" ON (("books"."libraryId" = "libraries"."id") AND ("books"."title" <> 'Walden'))
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "barbara@example.com", "libraryId": 1], ["isbn": "book2", "title": "The Fellowship of the Ring", "libraryId": 1]),
@@ -147,7 +181,13 @@ class HasManyThroughJoinedRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .joined(with: Reader.books.order(Column("title")))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, \"books\".* FROM \"readers\" JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") ORDER BY \"books\".\"title\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, "books".* \
+                    FROM "readers" \
+                    JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    ORDER BY "books"."title"
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "craig@example.com", "libraryId": 2], ["isbn": "book6", "title": "Eden, Eden, Eden", "libraryId": 2]),

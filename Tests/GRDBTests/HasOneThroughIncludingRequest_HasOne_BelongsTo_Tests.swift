@@ -22,8 +22,13 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                 .including(Country.continent)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\")")
-            
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "countries".*, "continents".* \
+                FROM "countries" \
+                JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId")
+                """)
+
             assertMatch(graph, [
                 (["code": "FR", "name": "France"], ["id": 1, "name": "Europe"]),
                 (["code": "DE", "name": "Germany"], ["id": 1, "name": "Europe"]),
@@ -44,8 +49,14 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .including(Country.continent)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\") WHERE (\"countries\".\"code\" <> \'DE\')")
-                
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId") \
+                    WHERE ("countries"."code" <> 'DE')
+                    """)
+
                 assertMatch(graph, [
                     (["code": "FR", "name": "France"], ["id": 1, "name": "Europe"]),
                     (["code": "US", "name": "United States"], ["id": 2, "name": "America"]),
@@ -59,7 +70,13 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .filter(Column("code") != "DE")
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\") WHERE (\"countries\".\"code\" <> \'DE\')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId") \
+                    WHERE ("countries"."code" <> 'DE')
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "FR", "name": "France"], ["id": 1, "name": "Europe"]),
@@ -74,8 +91,14 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .including(Country.continent)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\") ORDER BY \"countries\".\"name\" DESC")
-                
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId") \
+                    ORDER BY "countries"."name" DESC
+                    """)
+
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 2, "name": "America"]),
                     (["code": "DE", "name": "Germany"], ["id": 1, "name": "Europe"]),
@@ -90,7 +113,13 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .order(Column("name").desc)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\") ORDER BY \"countries\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId") \
+                    ORDER BY "countries"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 2, "name": "America"]),
@@ -113,7 +142,12 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .including(association)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") AND (\"countryProfiles\".\"currency\" <> \'EUR\')) JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\")")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."countryCode" = "countries"."code") AND ("countryProfiles"."currency" <> 'EUR')) \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId")
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 2, "name": "America"]),
@@ -127,7 +161,12 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .including(association)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\")")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId")
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "FR", "name": "France"], ["id": 1, "name": "Europe"]),
@@ -148,7 +187,12 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .including(Country.continent.filter(Column("name") != "America"))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON ((\"continents\".\"id\" = \"countryProfiles\".\"continentId\") AND (\"continents\".\"name\" <> \'America\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON (("continents"."id" = "countryProfiles"."continentId") AND ("continents"."name" <> 'America'))
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "FR", "name": "France"], ["id": 1, "name": "Europe"]),
@@ -161,7 +205,13 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .including(Country.continent.order(Column("name")))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\") ORDER BY \"continents\".\"name\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId") \
+                    ORDER BY "continents"."name"
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 2, "name": "America"]),
@@ -188,11 +238,16 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
         
         try dbQueue.inDatabase { db in
             do {
-                let middleAssociation = Person.hasOne(Person.self, from: "childId")
-                let rightAssociation = Person.belongsTo(Person.self, from: "parentId")
+                let middleAssociation = Person.hasOne(Person.self, foreignKey: ["childId"])
+                let rightAssociation = Person.belongsTo(Person.self, foreignKey: ["parentId"])
                 let association = Person.hasOne(rightAssociation, through: middleAssociation)
                 let request = Person.including(association)
-                try assertEqualSQL(db, request, "SELECT \"persons1\".*, \"persons3\".* FROM \"persons\" \"persons1\" JOIN \"persons\" \"persons2\" ON (\"persons2\".\"childId\" = \"persons1\".\"id\") JOIN \"persons\" \"persons3\" ON (\"persons3\".\"id\" = \"persons2\".\"parentId\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "persons1".*, "persons3".* \
+                    FROM "persons" "persons1" \
+                    JOIN "persons" "persons2" ON ("persons2"."childId" = "persons1"."id") \
+                    JOIN "persons" "persons3" ON ("persons3"."id" = "persons2"."parentId")
+                    """)
             }
         }
     }
@@ -208,7 +263,13 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .aliased("c")
                     .filter(Column("code") != "DE")
                     .including(Country.continent)
-                try assertEqualSQL(db, request, "SELECT \"c\".*, \"continents\".* FROM \"countries\" \"c\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"c\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\") WHERE (\"c\".\"code\" <> 'DE')")
+                try assertEqualSQL(db, request, """
+                    SELECT "c".*, "continents".* \
+                    FROM "countries" "c" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "c"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId") \
+                    WHERE ("c"."code" <> 'DE')
+                    """)
             }
             
             do {
@@ -217,7 +278,13 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                     .filter(Column("code") != "DE")
                     .including(Country.continent)
                     .aliased("c")
-                try assertEqualSQL(db, request, "SELECT \"c\".*, \"continents\".* FROM \"countries\" \"c\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"c\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\") WHERE (\"c\".\"code\" <> 'DE')")
+                try assertEqualSQL(db, request, """
+                    SELECT "c".*, "continents".* \
+                    FROM "countries" "c" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "c"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId") \
+                    WHERE ("c"."code" <> 'DE')
+                    """)
             }
             
             do {
@@ -225,7 +292,12 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                 let request = Country.all()
                     .aliased("countries")
                     .including(Country.continent)
-                try assertEqualSQL(db, request, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId")
+                    """)
             }
         }
     }
@@ -238,13 +310,23 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
             do {
                 let association = Country.hasOne(CountryProfile.continent, through: Country.profile.aliased("a"))
                 let request = Country.including(association)
-                try assertEqualSQL(db, request, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" \"a\" ON (\"a\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"a\".\"continentId\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" "a" ON ("a"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "a"."continentId")
+                    """)
             }
             do {
                 // alias with table name
                 let association = Country.hasOne(CountryProfile.continent, through: Country.profile.aliased("countryProfiles"))
                 let request = Country.including(association)
-                try assertEqualSQL(db, request, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId")
+                    """)
             }
         }
     }
@@ -261,7 +343,13 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                         .aliased("a")
                         .filter(Column("name") != "America"))
                     .order(Column("name").from("a"))
-                try assertEqualSQL(db, request, "SELECT \"countries\".*, \"a\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" \"a\" ON ((\"a\".\"id\" = \"countryProfiles\".\"continentId\") AND (\"a\".\"name\" <> \'America\')) ORDER BY \"a\".\"name\"")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries".*, "a".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" "a" ON (("a"."id" = "countryProfiles"."continentId") AND ("a"."name" <> 'America')) \
+                    ORDER BY "a"."name"
+                    """)
             }
             
             do {
@@ -271,13 +359,24 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
                         .order(Column("name"))
                         .aliased("a"))
                     .filter(Column("name").from("a") != "America")
-                try assertEqualSQL(db, request, "SELECT \"countries\".*, \"a\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" \"a\" ON (\"a\".\"id\" = \"countryProfiles\".\"continentId\") WHERE (\"a\".\"name\" <> \'America\') ORDER BY \"a\".\"name\"")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries".*, "a".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" "a" ON ("a"."id" = "countryProfiles"."continentId") \
+                    WHERE ("a"."name" <> 'America') ORDER BY "a"."name"
+                    """)
             }
             
             do {
                 // alias with table name (TODO: port this test to all testRightAlias() tests)
                 let request = Country.including(Country.continent.aliased("continents"))
-                try assertEqualSQL(db, request, "SELECT \"countries\".*, \"continents\".* FROM \"countries\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") JOIN \"continents\" ON (\"continents\".\"id\" = \"countryProfiles\".\"continentId\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries".*, "continents".* \
+                    FROM "countries" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    JOIN "continents" ON ("continents"."id" = "countryProfiles"."continentId")
+                    """)
             }
             
         }
@@ -291,13 +390,23 @@ class HasOneThroughIncludingRequest_HasOne_BelongsTo_Tests: GRDBTestCase {
             do {
                 // alias left
                 let request = Country.including(Country.continent).aliased("CONTINENTS")
-                try assertEqualSQL(db, request, "SELECT \"CONTINENTS\".*, \"continents1\".* FROM \"countries\" \"CONTINENTS\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"CONTINENTS\".\"code\") JOIN \"continents\" \"continents1\" ON (\"continents1\".\"id\" = \"countryProfiles\".\"continentId\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "CONTINENTS".*, "continents1".* \
+                    FROM "countries" "CONTINENTS" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "CONTINENTS"."code") \
+                    JOIN "continents" "continents1" ON ("continents1"."id" = "countryProfiles"."continentId")
+                    """)
             }
             
             do {
                 // alias right
                 let request = Country.including(Country.continent.aliased("COUNTRIES"))
-                try assertEqualSQL(db, request, "SELECT \"countries1\".*, \"COUNTRIES\".* FROM \"countries\" \"countries1\" JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries1\".\"code\") JOIN \"continents\" \"COUNTRIES\" ON (\"COUNTRIES\".\"id\" = \"countryProfiles\".\"continentId\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries1".*, "COUNTRIES".* \
+                    FROM "countries" "countries1" \
+                    JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries1"."code") \
+                    JOIN "continents" "COUNTRIES" ON ("COUNTRIES"."id" = "countryProfiles"."continentId")
+                    """)
             }
         }
     }

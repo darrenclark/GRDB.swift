@@ -21,8 +21,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                 .joined(with: Country.profile)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\")")
-            
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "countries".* \
+                FROM "countries" \
+                LEFT JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code")
+                """)
+
             assertMatch(graph, [
                 ["code": "FR", "name": "France"],
                 ["code": "US", "name": "United States"],
@@ -44,7 +48,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                     .joined(with: Country.profile)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") WHERE (\"countries\".\"code\" <> 'FR')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".* \
+                    FROM "countries" \
+                    LEFT JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    WHERE ("countries"."code" <> 'FR')
+                    """)
                 
                 assertMatch(graph, [
                     ["code": "US", "name": "United States"],
@@ -60,7 +69,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                     .filter(Column("code") != "FR")
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") WHERE (\"countries\".\"code\" <> 'FR')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".* \
+                    FROM "countries" \
+                    LEFT JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    WHERE ("countries"."code" <> 'FR')
+                    """)
                 
                 assertMatch(graph, [
                     ["code": "US", "name": "United States"],
@@ -76,7 +90,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                     .joined(with: Country.profile)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") ORDER BY \"countries\".\"code\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".* \
+                    FROM "countries" \
+                    LEFT JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    ORDER BY "countries"."code"
+                    """)
                 
                 assertMatch(graph, [
                     ["code": "AA", "name": "Atlantis"],
@@ -93,7 +112,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                     .order(Column("code"))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") ORDER BY \"countries\".\"code\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".* \
+                    FROM "countries" \
+                    LEFT JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code") \
+                    ORDER BY "countries"."code"
+                    """)
                 
                 assertMatch(graph, [
                     ["code": "AA", "name": "Atlantis"],
@@ -115,8 +139,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                     .joined(with: Country.profile.filter(Column("currency") == "EUR"))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"countryCode\" = \"countries\".\"code\") AND (\"countryProfiles\".\"currency\" = \'EUR\'))")
-                
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".* \
+                    FROM "countries" \
+                    LEFT JOIN "countryProfiles" ON (("countryProfiles"."countryCode" = "countries"."code") AND ("countryProfiles"."currency" = 'EUR'))
+                    """)
+
                 // TODO: is it expected/well designed to have countries whose currency is not Euro here?
                 // TODO: how to get countries whose currency is Euro?
                 assertMatch(graph, [
@@ -132,7 +160,11 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                     .joined(with: Country.profile.order(Column("area")))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"countries\".\"code\")")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".* \
+                    FROM "countries" \
+                    LEFT JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "countries"."code")
+                    """)
                 
                 assertMatch(graph, [
                     ["code": "FR", "name": "France"],
@@ -161,7 +193,11 @@ class HasOneJoinedRequestTests: GRDBTestCase {
             do {
                 let association = Person.hasOne(Person.self)
                 let request = Person.joined(with: association)
-                try assertEqualSQL(db, request, "SELECT \"persons1\".* FROM \"persons\" \"persons1\" LEFT JOIN \"persons\" \"persons2\" ON (\"persons2\".\"parentId\" = \"persons1\".\"id\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "persons1".* \
+                    FROM "persons" "persons1" \
+                    LEFT JOIN "persons" "persons2" ON ("persons2"."parentId" = "persons1"."id")
+                    """)
             }
         }
     }
@@ -177,7 +213,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                     .aliased("c")
                     .filter(Column("code") != "FR")
                     .joined(with: Country.profile)
-                try assertEqualSQL(db, request, "SELECT \"c\".* FROM \"countries\" \"c\" LEFT JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"c\".\"code\") WHERE (\"c\".\"code\" <> \'FR\')")
+                try assertEqualSQL(db, request, """
+                    SELECT "c".* \
+                    FROM "countries" "c" \
+                    LEFT JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "c"."code") \
+                    WHERE ("c"."code" <> 'FR')
+                    """)
             }
             
             do {
@@ -186,7 +227,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                     .filter(Column("code") != "FR")
                     .joined(with: Country.profile)
                     .aliased("c")
-                try assertEqualSQL(db, request, "SELECT \"c\".* FROM \"countries\" \"c\" LEFT JOIN \"countryProfiles\" ON (\"countryProfiles\".\"countryCode\" = \"c\".\"code\") WHERE (\"c\".\"code\" <> \'FR\')")
+                try assertEqualSQL(db, request, """
+                    SELECT "c".* \
+                    FROM "countries" "c" \
+                    LEFT JOIN "countryProfiles" ON ("countryProfiles"."countryCode" = "c"."code") \
+                    WHERE ("c"."code" <> 'FR')
+                    """)
             }
         }
     }
@@ -203,7 +249,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                         .aliased("a")
                         .filter(Column("currency") == "EUR"))
                     .order(Column("area").from("a"))
-                try assertEqualSQL(db, request, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" \"a\" ON ((\"a\".\"countryCode\" = \"countries\".\"code\") AND (\"a\".\"currency\" = \'EUR\')) ORDER BY \"a\".\"area\"")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries".* \
+                    FROM "countries" \
+                    LEFT JOIN "countryProfiles" "a" ON (("a"."countryCode" = "countries"."code") AND ("a"."currency" = 'EUR')) \
+                    ORDER BY "a"."area"
+                    """)
             }
             
             do {
@@ -213,7 +264,12 @@ class HasOneJoinedRequestTests: GRDBTestCase {
                         .order(Column("area"))
                         .aliased("a"))
                     .filter(Column("currency").from("a") == "EUR")
-                try assertEqualSQL(db, request, "SELECT \"countries\".* FROM \"countries\" LEFT JOIN \"countryProfiles\" \"a\" ON (\"a\".\"countryCode\" = \"countries\".\"code\") WHERE (\"a\".\"currency\" = \'EUR\')")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries".* \
+                    FROM "countries" \
+                    LEFT JOIN "countryProfiles" "a" ON ("a"."countryCode" = "countries"."code") \
+                    WHERE ("a"."currency" = 'EUR')
+                    """)
             }
         }
     }
@@ -226,13 +282,21 @@ class HasOneJoinedRequestTests: GRDBTestCase {
             do {
                 // alias left
                 let request = Country.joined(with: Country.profile).aliased("COUNTRYPROFILES")
-                try assertEqualSQL(db, request, "SELECT \"COUNTRYPROFILES\".* FROM \"countries\" \"COUNTRYPROFILES\" LEFT JOIN \"countryProfiles\" \"countryProfiles1\" ON (\"countryProfiles1\".\"countryCode\" = \"COUNTRYPROFILES\".\"code\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "COUNTRYPROFILES".* \
+                    FROM "countries" "COUNTRYPROFILES" \
+                    LEFT JOIN "countryProfiles" "countryProfiles1" ON ("countryProfiles1"."countryCode" = "COUNTRYPROFILES"."code")
+                    """)
             }
             
             do {
                 // alias right
                 let request = Country.joined(with: Country.profile.aliased("COUNTRIES"))
-                try assertEqualSQL(db, request, "SELECT \"countries1\".* FROM \"countries\" \"countries1\" LEFT JOIN \"countryProfiles\" \"COUNTRIES\" ON (\"COUNTRIES\".\"countryCode\" = \"countries1\".\"code\")")
+                try assertEqualSQL(db, request, """
+                    SELECT "countries1".* \
+                    FROM "countries" "countries1" \
+                    LEFT JOIN "countryProfiles" "COUNTRIES" ON ("COUNTRIES"."countryCode" = "countries1"."code")
+                    """)
             }
         }
     }

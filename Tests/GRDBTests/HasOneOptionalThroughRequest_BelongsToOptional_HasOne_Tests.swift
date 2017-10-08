@@ -21,7 +21,11 @@ class HasOneOptionalThroughRequest_BelongsToOptional_HasOne_Tests: GRDBTestCase 
                 let book = try Book.fetchOne(db, key: "book1")!
                 let request = book.request(Book.optionalLibraryAddress)
                 let libraryAddress = try request.fetchOne(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"libraryAddresses\".* FROM \"libraryAddresses\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"libraryAddresses\".\"libraryId\") AND (\"libraries\".\"id\" IS NULL))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "libraryAddresses".* \
+                    FROM "libraryAddresses" \
+                    JOIN "libraries" ON (("libraries"."id" = "libraryAddresses"."libraryId") AND ("libraries"."id" IS NULL))
+                    """)    // TODO: this request is weird.
                 XCTAssertNil(libraryAddress)
             }
             
@@ -29,7 +33,11 @@ class HasOneOptionalThroughRequest_BelongsToOptional_HasOne_Tests: GRDBTestCase 
                 let book = try Book.fetchOne(db, key: "book2")!
                 let request = book.request(Book.optionalLibraryAddress)
                 let libraryAddress = try request.fetchOne(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"libraryAddresses\".* FROM \"libraryAddresses\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"libraryAddresses\".\"libraryId\") AND (\"libraries\".\"id\" = 1))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "libraryAddresses".* \
+                    FROM "libraryAddresses" \
+                    JOIN "libraries" ON (("libraries"."id" = "libraryAddresses"."libraryId") AND ("libraries"."id" = 1))
+                    """)    // TODO: this request is weird.
                 assertMatch(libraryAddress, ["city": "Paris", "libraryId": 1])
             }
             
@@ -37,7 +45,11 @@ class HasOneOptionalThroughRequest_BelongsToOptional_HasOne_Tests: GRDBTestCase 
                 let book = try Book.fetchOne(db, key: "book5")!
                 let request = book.request(Book.optionalLibraryAddress)
                 let libraryAddress = try request.fetchOne(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"libraryAddresses\".* FROM \"libraryAddresses\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"libraryAddresses\".\"libraryId\") AND (\"libraries\".\"id\" = 2))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "libraryAddresses".* \
+                    FROM "libraryAddresses" \
+                    JOIN "libraries" ON (("libraries"."id" = "libraryAddresses"."libraryId") AND ("libraries"."id" = 2))
+                    """)    // TODO: this request is weird.
                 assertMatch(libraryAddress, ["city": "London", "libraryId": 2])
             }
             
@@ -45,7 +57,11 @@ class HasOneOptionalThroughRequest_BelongsToOptional_HasOne_Tests: GRDBTestCase 
                 let book = try Book.fetchOne(db, key: "book8")!
                 let request = book.request(Book.optionalLibraryAddress)
                 let libraryAddress = try request.fetchOne(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"libraryAddresses\".* FROM \"libraryAddresses\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"libraryAddresses\".\"libraryId\") AND (\"libraries\".\"id\" = 4))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "libraryAddresses".* \
+                    FROM "libraryAddresses" \
+                    JOIN "libraries" ON (("libraries"."id" = "libraryAddresses"."libraryId") AND ("libraries"."id" = 4))
+                    """)    // TODO: this request is weird.
                 XCTAssertNil(libraryAddress)
             }
         }
@@ -59,28 +75,44 @@ class HasOneOptionalThroughRequest_BelongsToOptional_HasOne_Tests: GRDBTestCase 
             do {
                 let book = try Book.fetchOne(db, key: "book1")!
                 let libraryAddress = try book.fetchOne(db, Book.optionalLibraryAddress)
-                assertEqualSQL(lastSQLQuery, "SELECT \"libraryAddresses\".* FROM \"libraryAddresses\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"libraryAddresses\".\"libraryId\") AND (\"libraries\".\"id\" IS NULL))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "libraryAddresses".* \
+                    FROM "libraryAddresses" \
+                    JOIN "libraries" ON (("libraries"."id" = "libraryAddresses"."libraryId") AND ("libraries"."id" IS NULL))
+                    """)    // TODO: this request is weird.
                 XCTAssertNil(libraryAddress)
             }
             
             do {
                 let book = try Book.fetchOne(db, key: "book2")!
                 let libraryAddress = try book.fetchOne(db, Book.optionalLibraryAddress)
-                assertEqualSQL(lastSQLQuery, "SELECT \"libraryAddresses\".* FROM \"libraryAddresses\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"libraryAddresses\".\"libraryId\") AND (\"libraries\".\"id\" = 1))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "libraryAddresses".* \
+                    FROM "libraryAddresses" \
+                    JOIN "libraries" ON (("libraries"."id" = "libraryAddresses"."libraryId") AND ("libraries"."id" = 1))
+                    """)    // TODO: this request is weird.
                 assertMatch(libraryAddress, ["city": "Paris", "libraryId": 1])
             }
             
             do {
                 let book = try Book.fetchOne(db, key: "book5")!
                 let libraryAddress = try book.fetchOne(db, Book.optionalLibraryAddress)
-                assertEqualSQL(lastSQLQuery, "SELECT \"libraryAddresses\".* FROM \"libraryAddresses\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"libraryAddresses\".\"libraryId\") AND (\"libraries\".\"id\" = 2))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "libraryAddresses".* \
+                    FROM "libraryAddresses" \
+                    JOIN "libraries" ON (("libraries"."id" = "libraryAddresses"."libraryId") AND ("libraries"."id" = 2))
+                    """)    // TODO: this request is weird.
                 assertMatch(libraryAddress, ["city": "London", "libraryId": 2])
             }
             
             do {
                 let book = try Book.fetchOne(db, key: "book8")!
                 let libraryAddress = try book.fetchOne(db, Book.optionalLibraryAddress)
-                assertEqualSQL(lastSQLQuery, "SELECT \"libraryAddresses\".* FROM \"libraryAddresses\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"libraryAddresses\".\"libraryId\") AND (\"libraries\".\"id\" = 4))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "libraryAddresses".* \
+                    FROM "libraryAddresses" \
+                    JOIN "libraries" ON (("libraries"."id" = "libraryAddresses"."libraryId") AND ("libraries"."id" = 4))
+                    """)    // TODO: this request is weird.
                 XCTAssertNil(libraryAddress)
             }
         }
@@ -105,11 +137,15 @@ class HasOneOptionalThroughRequest_BelongsToOptional_HasOne_Tests: GRDBTestCase 
         
         try dbQueue.inDatabase { db in
             do {
-                let middleAssociation = Person.belongsTo(optional: Person.self, from: "parentId")
-                let rightAssociation = Person.hasOne(Person.self, from: "childId")
+                let middleAssociation = Person.belongsTo(optional: Person.self, foreignKey: ["parentId"])
+                let rightAssociation = Person.hasOne(Person.self, foreignKey: ["childId"])
                 let association = Person.hasOne(optional: rightAssociation, through: middleAssociation)
                 let request = Person().request(association)
-                try assertEqualSQL(db, request, "SELECT \"persons2\".* FROM \"persons\" \"persons2\" JOIN \"persons\" \"persons1\" ON ((\"persons1\".\"id\" = \"persons2\".\"childId\") AND (\"persons1\".\"id\" = 1))")
+                try assertEqualSQL(db, request, """
+                    SELECT "persons2".* \
+                    FROM "persons" "persons2" \
+                    JOIN "persons" "persons1" ON (("persons1"."id" = "persons2"."childId") AND ("persons1"."id" = 1))
+                    """)    // TODO: this request is weird.
             }
         }
     }
@@ -123,14 +159,22 @@ class HasOneOptionalThroughRequest_BelongsToOptional_HasOne_Tests: GRDBTestCase 
                 // alias first
                 let book = try Book.fetchOne(db, key: "book1")!
                 let request = book.request(Book.optionalLibraryAddress.aliased("a"))
-                try assertEqualSQL(db, request, "SELECT \"a\".* FROM \"libraryAddresses\" \"a\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"a\".\"libraryId\") AND (\"libraries\".\"id\" IS NULL))")
+                try assertEqualSQL(db, request, """
+                    SELECT "a".* \
+                    FROM "libraryAddresses" "a" \
+                    JOIN "libraries" ON (("libraries"."id" = "a"."libraryId") AND ("libraries"."id" IS NULL))
+                    """)    // TODO: this request is weird.
             }
             
             do {
                 // alias last
                 let book = try Book.fetchOne(db, key: "book1")!
                 let request = book.request(Book.optionalLibraryAddress).aliased("a")
-                try assertEqualSQL(db, request, "SELECT \"a\".* FROM \"libraryAddresses\" \"a\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"a\".\"libraryId\") AND (\"libraries\".\"id\" IS NULL))")
+                try assertEqualSQL(db, request, """
+                    SELECT "a".* \
+                    FROM "libraryAddresses" "a" \
+                    JOIN "libraries" ON (("libraries"."id" = "a"."libraryId") AND ("libraries"."id" IS NULL))
+                    """)    // TODO: this request is weird.
             }
         }
     }

@@ -147,14 +147,9 @@ class GRDBTestCase: XCTestCase {
     
     // TODO: rename along with assertMatch
     func assert(_ record: MutablePersistable, isEncodedIn row: Row, file: StaticString = #file, line: UInt = #line) {
-        let recordContent = AnySequence({ PersistenceContainer(record).makeIterator() })
-        for (column, value) in recordContent {
-            if let dbValue: DatabaseValue = row[column] {
-                XCTAssertEqual(dbValue, value?.databaseValue ?? .null)
-            } else {
-                XCTFail("Missing column \(column) in fetched row")
-            }
-        }
+        let recordDict = record.databaseDictionary
+        let rowDict = Dictionary(row, uniquingKeysWith: { (left, _) in left })
+        XCTAssertEqual(recordDict, rowDict, file: file, line: line)
     }
     
     func assertMatch<T>(_ record: T?, _ expectedRow: Row?, file: StaticString = #file, line: UInt = #line) where T: MutablePersistable {

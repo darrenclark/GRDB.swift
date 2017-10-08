@@ -24,8 +24,14 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 .fetchAll(db)
             
             // TODO: check request & results
-            assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") GROUP BY \"readers\".\"email\"")
-            
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "readers".*, COUNT("books"."isbn") \
+                FROM "readers" \
+                LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                GROUP BY "readers"."email"
+                """)
+
             assertMatch(graph, [
                 (["email": "arthur@example.com", "libraryId": nil], 0),
                 (["email": "barbara@example.com", "libraryId": 1], 3),
@@ -48,7 +54,14 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .annotated(with: Reader.books.count)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"readers\".\"email\" <> \'barbara@example.com\') GROUP BY \"readers\".\"email\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, COUNT("books"."isbn") \
+                    FROM "readers" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    WHERE ("readers"."email" <> 'barbara@example.com') \
+                    GROUP BY "readers"."email"
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "arthur@example.com", "libraryId": nil], 0),
@@ -65,7 +78,14 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .filter(Column("email") != "barbara@example.com")
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") WHERE (\"readers\".\"email\" <> \'barbara@example.com\') GROUP BY \"readers\".\"email\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, COUNT("books"."isbn") \
+                    FROM "readers" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    WHERE ("readers"."email" <> 'barbara@example.com') \
+                    GROUP BY "readers"."email"
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "arthur@example.com", "libraryId": nil], 0),
@@ -82,7 +102,14 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .annotated(with: Reader.books.count)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") GROUP BY \"readers\".\"email\" ORDER BY \"readers\".\"email\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, COUNT("books"."isbn") \
+                    FROM "readers" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    GROUP BY "readers"."email" \
+                    ORDER BY "readers"."email" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "eve@example.com", "libraryId": 3], 0),
@@ -100,7 +127,14 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .order(Column("email").desc)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") GROUP BY \"readers\".\"email\" ORDER BY \"readers\".\"email\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, COUNT("books"."isbn") \
+                    FROM "readers" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    GROUP BY "readers"."email" \
+                    ORDER BY "readers"."email" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "eve@example.com", "libraryId": 3], 0),
@@ -124,7 +158,13 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .annotated(with: Reader.books.filter(Column("title") != "Walden").count)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON ((\"books\".\"libraryId\" = \"libraries\".\"id\") AND (\"books\".\"title\" <> \'Walden\')) GROUP BY \"readers\".\"email\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, COUNT("books"."isbn") \
+                    FROM "readers" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    LEFT JOIN "books" ON (("books"."libraryId" = "libraries"."id") AND ("books"."title" <> 'Walden')) \
+                    GROUP BY "readers"."email"
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "arthur@example.com", "libraryId": nil], 0),
@@ -141,7 +181,13 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .annotated(with: Reader.books.order(Column("title")).count)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") GROUP BY \"readers\".\"email\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "readers".*, COUNT("books"."isbn") \
+                    FROM "readers" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    GROUP BY "readers"."email"
+                    """)
                 
                 assertMatch(graph, [
                     (["email": "arthur@example.com", "libraryId": nil], 0),
@@ -165,7 +211,14 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 .fetchAll(db)
             
             // TODO: check request & results
-            assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") AS \"a\" FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") GROUP BY \"readers\".\"email\" ORDER BY a, email")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "readers".*, COUNT("books"."isbn") AS "a" \
+                FROM "readers" \
+                LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                GROUP BY "readers"."email" \
+                ORDER BY a, email
+                """)
             
             assertMatch(graph, [
                 (["email": "arthur@example.com", "libraryId": nil], 0),

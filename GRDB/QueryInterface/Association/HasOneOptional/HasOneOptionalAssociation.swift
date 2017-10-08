@@ -34,7 +34,7 @@ extension TableMapping {
         return HasOneOptionalAssociation(joinMappingRequest: joinMappingRequest, rightRequest: Right.all())
     }
     
-    public static func hasOne<Right>(optional right: Right.Type, from originColumns: String...) -> HasOneOptionalAssociation<Self, Right> where Right: TableMapping {
+    public static func hasOne<Right>(optional right: Right.Type, foreignKey originColumns: [String]) -> HasOneOptionalAssociation<Self, Right> where Right: TableMapping {
         let joinMappingRequest = JoinMappingRequest(
             originTable: Right.databaseTableName,
             destinationTable: databaseTableName,
@@ -42,7 +42,7 @@ extension TableMapping {
         return HasOneOptionalAssociation(joinMappingRequest: joinMappingRequest, rightRequest: Right.all())
     }
     
-    public static func hasOne<Right>(optional right: Right.Type, from originColumns: [String], to destinationColumns: [String]) -> HasOneOptionalAssociation<Self, Right> where Right: TableMapping {
+    public static func hasOne<Right>(optional right: Right.Type, foreignKey originColumns: [String], to destinationColumns: [String]) -> HasOneOptionalAssociation<Self, Right> where Right: TableMapping {
         let joinMappingRequest = JoinMappingRequest(
             originTable: Right.databaseTableName,
             destinationTable: databaseTableName,

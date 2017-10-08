@@ -26,7 +26,11 @@ class HasManyJoinedRequestTests: GRDBTestCase {
                 .joined(with: Author.books)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"authors\".*, \"books\".* FROM \"authors\" JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\")")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "authors".*, "books".* \
+                FROM "authors" \
+                JOIN "books" ON ("books"."authorId" = "authors"."id")
+                """)
             
             assertMatch(graph, [
                 (["id": 2, "name": "J. M. Coetzee", "birthYear": 1940], ["id": 1, "authorId": 2, "title": "Foe", "year": 1986]),
@@ -53,7 +57,12 @@ class HasManyJoinedRequestTests: GRDBTestCase {
                     .joined(with: Author.books)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".*, \"books\".* FROM \"authors\" JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") WHERE (\"authors\".\"birthYear\" >= 1900)")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".*, "books".* \
+                    FROM "authors" \
+                    JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    WHERE ("authors"."birthYear" >= 1900)
+                    """)
                 
                 assertMatch(graph, [
                     (["id": 2, "name": "J. M. Coetzee", "birthYear": 1940], ["id": 1, "authorId": 2, "title": "Foe", "year": 1986]),
@@ -73,7 +82,12 @@ class HasManyJoinedRequestTests: GRDBTestCase {
                     .filter(Column("birthYear") >= 1900)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".*, \"books\".* FROM \"authors\" JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") WHERE (\"authors\".\"birthYear\" >= 1900)")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".*, "books".* \
+                    FROM "authors" \
+                    JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    WHERE ("authors"."birthYear" >= 1900)
+                    """)
                 
                 assertMatch(graph, [
                     (["id": 2, "name": "J. M. Coetzee", "birthYear": 1940], ["id": 1, "authorId": 2, "title": "Foe", "year": 1986]),
@@ -93,7 +107,12 @@ class HasManyJoinedRequestTests: GRDBTestCase {
                     .joined(with: Author.books)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".*, \"books\".* FROM \"authors\" JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") ORDER BY \"authors\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".*, "books".* \
+                    FROM "authors" \
+                    JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    ORDER BY "authors"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["id": 4, "name": "Kim Stanley Robinson", "birthYear": 1952], ["id": 4, "authorId": 4, "title": "New York 2140", "year": 2017]),
@@ -114,7 +133,12 @@ class HasManyJoinedRequestTests: GRDBTestCase {
                     .order(Column("name").desc)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".*, \"books\".* FROM \"authors\" JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") ORDER BY \"authors\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".*, "books".* \
+                    FROM "authors" \
+                    JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    ORDER BY "authors"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["id": 4, "name": "Kim Stanley Robinson", "birthYear": 1952], ["id": 4, "authorId": 4, "title": "New York 2140", "year": 2017]),
@@ -141,7 +165,11 @@ class HasManyJoinedRequestTests: GRDBTestCase {
                     .joined(with: Author.books.filter(Column("year") < 2000))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".*, \"books\".* FROM \"authors\" JOIN \"books\" ON ((\"books\".\"authorId\" = \"authors\".\"id\") AND (\"books\".\"year\" < 2000))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".*, "books".* \
+                    FROM "authors" \
+                    JOIN "books" ON (("books"."authorId" = "authors"."id") AND ("books"."year" < 2000))
+                    """)
                 
                 assertMatch(graph, [
                     (["id": 2, "name": "J. M. Coetzee", "birthYear": 1940], ["id": 1, "authorId": 2, "title": "Foe", "year": 1986]),
@@ -158,7 +186,12 @@ class HasManyJoinedRequestTests: GRDBTestCase {
                     .joined(with: Author.books.order(Column("title")))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".*, \"books\".* FROM \"authors\" JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") ORDER BY \"books\".\"title\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".*, "books".* \
+                    FROM "authors" \
+                    JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    ORDER BY "books"."title"
+                    """)
                 
                 assertMatch(graph, [
                     (["id": 4, "name": "Kim Stanley Robinson", "birthYear": 1952], ["id": 5, "authorId": 4, "title": "2312", "year": 2012]),

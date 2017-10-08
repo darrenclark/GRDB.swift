@@ -249,7 +249,13 @@ class HasManyIncludingRequestTests: GRDBTestCase {
                     .including(Author.books)
                     .fetchAll(db)
                 
-                assertEqualSQL(sqlQueries[sqlQueries.count - 2], "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") > 1)")
+                assertEqualSQL(sqlQueries[sqlQueries.count - 2], """
+                    SELECT "authors".* \
+                    FROM "authors" \
+                    LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    GROUP BY "authors"."id" \
+                    HAVING (COUNT("books"."id") > 1)
+                    """)
                 XCTAssertTrue([2, 4].sqlPermutations.contains {
                     sqlQueries[sqlQueries.count - 1] == String(format: "SELECT * FROM \"books\" WHERE (\"authorId\" IN (2, 4))", $0)
                 })
@@ -275,7 +281,13 @@ class HasManyIncludingRequestTests: GRDBTestCase {
                     .filter(Author.books.count > 1)
                     .fetchAll(db)
                 
-                assertEqualSQL(sqlQueries[sqlQueries.count - 2], "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") > 1)")
+                assertEqualSQL(sqlQueries[sqlQueries.count - 2], """
+                    SELECT "authors".* \
+                    FROM "authors" \
+                    LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    GROUP BY "authors"."id" \
+                    HAVING (COUNT("books"."id") > 1)
+                    """)
                 XCTAssertTrue([2, 4].sqlPermutations.contains {
                     sqlQueries[sqlQueries.count - 1] == String(format: "SELECT * FROM \"books\" WHERE (\"authorId\" IN (2, 4))", $0)
                 })

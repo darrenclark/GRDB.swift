@@ -24,8 +24,14 @@ class HasManyThroughAnnotationRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                 .fetchAll(db)
             
             // TODO: check request & results
-            assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, COUNT(\"persons\".\"id\") FROM \"countries\" LEFT JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") LEFT JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") GROUP BY \"countries\".\"code\"")
-            
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "countries".*, COUNT("persons"."id") \
+                FROM "countries" \
+                LEFT JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                LEFT JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                GROUP BY "countries"."code"
+                """)
+
             assertMatch(graph, [
                 (["code": "DE", "name": "Germany"], 0),
                 (["code": "FR", "name": "France"], 2),
@@ -46,7 +52,14 @@ class HasManyThroughAnnotationRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .annotated(with: Country.citizens.count)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, COUNT(\"persons\".\"id\") FROM \"countries\" LEFT JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") LEFT JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") WHERE (\"countries\".\"code\" <> \'FR\') GROUP BY \"countries\".\"code\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, COUNT("persons"."id") \
+                    FROM "countries" \
+                    LEFT JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    LEFT JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    WHERE ("countries"."code" <> 'FR') \
+                    GROUP BY "countries"."code"
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "DE", "name": "Germany"], 0),
@@ -61,7 +74,14 @@ class HasManyThroughAnnotationRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .filter(Column("code") != "FR")
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, COUNT(\"persons\".\"id\") FROM \"countries\" LEFT JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") LEFT JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") WHERE (\"countries\".\"code\" <> \'FR\') GROUP BY \"countries\".\"code\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, COUNT("persons"."id") \
+                    FROM "countries" \
+                    LEFT JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    LEFT JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    WHERE ("countries"."code" <> 'FR') \
+                    GROUP BY "countries"."code"
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "DE", "name": "Germany"], 0),
@@ -76,7 +96,14 @@ class HasManyThroughAnnotationRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .annotated(with: Country.citizens.count)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, COUNT(\"persons\".\"id\") FROM \"countries\" LEFT JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") LEFT JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") GROUP BY \"countries\".\"code\" ORDER BY \"countries\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, COUNT("persons"."id") \
+                    FROM "countries" \
+                    LEFT JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    LEFT JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    GROUP BY "countries"."code" \
+                    ORDER BY "countries"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], 2),
@@ -92,7 +119,14 @@ class HasManyThroughAnnotationRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .order(Column("name").desc)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, COUNT(\"persons\".\"id\") FROM \"countries\" LEFT JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") LEFT JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") GROUP BY \"countries\".\"code\" ORDER BY \"countries\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, COUNT("persons"."id") \
+                    FROM "countries" \
+                    LEFT JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    LEFT JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    GROUP BY "countries"."code" \
+                    ORDER BY "countries"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], 2),
@@ -114,7 +148,13 @@ class HasManyThroughAnnotationRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .annotated(with: Country.citizens.filter(Column("name") != "Craig").count)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, COUNT(\"persons\".\"id\") FROM \"countries\" LEFT JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") LEFT JOIN \"persons\" ON ((\"persons\".\"id\" = \"citizenships\".\"personId\") AND (\"persons\".\"name\" <> \'Craig\')) GROUP BY \"countries\".\"code\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, COUNT("persons"."id") \
+                    FROM "countries" \
+                    LEFT JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    LEFT JOIN "persons" ON (("persons"."id" = "citizenships"."personId") AND ("persons"."name" <> 'Craig')) \
+                    GROUP BY "countries"."code"
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "DE", "name": "Germany"], 0),
@@ -129,7 +169,13 @@ class HasManyThroughAnnotationRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .annotated(with: Country.citizens.order(Column("title")).count)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, COUNT(\"persons\".\"id\") FROM \"countries\" LEFT JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") LEFT JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") GROUP BY \"countries\".\"code\"")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, COUNT("persons"."id") \
+                    FROM "countries" \
+                    LEFT JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    LEFT JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    GROUP BY "countries"."code"
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "DE", "name": "Germany"], 0),

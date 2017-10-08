@@ -25,7 +25,11 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
             
             XCTAssertEqual(sqlQueries[sqlQueries.count - 3], "SELECT * FROM \"readers\"")
             XCTAssertTrue([1, 2, 3].sqlPermutations.contains {
-                sqlQueries[sqlQueries.count - 1] == String(format: "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (%@)))", $0)
+                sqlQueries[sqlQueries.count - 1] == String(format: """
+                    SELECT "libraries"."id", "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (%@)))
+                    """, $0)
             })
             
             assertMatch(graph, [
@@ -62,7 +66,11 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 
                 XCTAssertEqual(sqlQueries[sqlQueries.count - 3], "SELECT * FROM \"readers\" WHERE (\"email\" <> \'barbara@example.com\')")
                 XCTAssertTrue([2, 3].sqlPermutations.contains {
-                    sqlQueries[sqlQueries.count - 1] == String(format: "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (%@)))", $0)
+                    sqlQueries[sqlQueries.count - 1] == String(format: """
+                        SELECT "libraries"."id", "books".* \
+                        FROM "books" \
+                        JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (%@)))
+                        """, $0)
                 })
                 
                 assertMatch(graph, [
@@ -88,7 +96,11 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 
                 XCTAssertEqual(sqlQueries[sqlQueries.count - 2], "SELECT * FROM \"readers\" WHERE (\"email\" <> \'barbara@example.com\')")
                 XCTAssertTrue([2, 3].sqlPermutations.contains {
-                    sqlQueries[sqlQueries.count - 1] == String(format: "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (%@)))", $0)
+                    sqlQueries[sqlQueries.count - 1] == String(format: """
+                        SELECT "libraries"."id", "books".* \
+                        FROM "books" \
+                        JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (%@)))
+                        """, $0)
                 })
                 
                 assertMatch(graph, [
@@ -114,7 +126,11 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 
                 XCTAssertEqual(sqlQueries[sqlQueries.count - 2], "SELECT * FROM \"readers\" ORDER BY \"email\" DESC")
                 XCTAssertTrue([1, 2, 3].sqlPermutations.contains {
-                    sqlQueries[sqlQueries.count - 1] == String(format: "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (%@)))", $0)
+                    sqlQueries[sqlQueries.count - 1] == String(format: """
+                        SELECT "libraries"."id", "books".* \
+                        FROM "books" \
+                        JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (%@)))
+                        """, $0)
                 })
                 
                 assertMatch(graph, [
@@ -145,7 +161,11 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 
                 XCTAssertEqual(sqlQueries[sqlQueries.count - 2], "SELECT * FROM \"readers\" ORDER BY \"email\" DESC")
                 XCTAssertTrue([1, 2, 3].sqlPermutations.contains {
-                    sqlQueries[sqlQueries.count - 1] == String(format: "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (2, 3, 1)))", $0)
+                    sqlQueries[sqlQueries.count - 1] == String(format: """
+                        SELECT "libraries"."id", "books".* \
+                        FROM "books" \
+                        JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (%@)))
+                        """, $0)
                 })
                 
                 assertMatch(graph, [
@@ -182,7 +202,12 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 
                 XCTAssertEqual(sqlQueries[sqlQueries.count - 3], "SELECT * FROM \"readers\"")
                 XCTAssertTrue([1, 2, 3].sqlPermutations.contains {
-                    sqlQueries[sqlQueries.count - 1] == String(format: "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (%@))) WHERE (\"books\".\"title\" <> \'Walden\')", $0)
+                    sqlQueries[sqlQueries.count - 1] == String(format: """
+                        SELECT "libraries"."id", "books".* \
+                        FROM "books" \
+                        JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (%@))) \
+                        WHERE ("books"."title" <> 'Walden')
+                        """, $0)
                 })
                 
                 assertMatch(graph, [
@@ -211,7 +236,12 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 
                 XCTAssertEqual(sqlQueries[sqlQueries.count - 2], "SELECT * FROM \"readers\"")
                 XCTAssertTrue([1, 2, 3].sqlPermutations.contains {
-                    sqlQueries[sqlQueries.count - 1] == String(format: "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (%@))) ORDER BY \"books\".\"title\"", $0)
+                    sqlQueries[sqlQueries.count - 1] == String(format: """
+                        SELECT "libraries"."id", "books".* \
+                        FROM "books" \
+                        JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (%@))) \
+                        ORDER BY "books"."title"
+                        """, $0)
                 })
                 
                 assertMatch(graph, [
@@ -247,8 +277,19 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .including(Reader.books)
                     .fetchAll(db)
                 
-                XCTAssertEqual(sqlQueries[sqlQueries.count - 2], "SELECT \"readers\".* FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") GROUP BY \"readers\".\"email\" HAVING (COUNT(\"books\".\"isbn\") = 2)")
-                XCTAssertEqual(sqlQueries[sqlQueries.count - 1], "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (2)))")
+                XCTAssertEqual(sqlQueries[sqlQueries.count - 2], """
+                    SELECT "readers".* \
+                    FROM "readers" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    GROUP BY "readers"."email" \
+                    HAVING (COUNT("books"."isbn") = 2)
+                    """)
+                XCTAssertEqual(sqlQueries[sqlQueries.count - 1], """
+                    SELECT "libraries"."id", "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (2)))
+                    """) // TODO: is this JOIN useful? If not, remove it.
                 
                 assertMatch(graph, [
                     (["email": "craig@example.com", "libraryId": 2], [
@@ -268,8 +309,19 @@ class HasManyThroughIncludingRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                     .filter(Reader.books.count == 2)
                     .fetchAll(db)
                 
-                XCTAssertEqual(sqlQueries[sqlQueries.count - 2], "SELECT \"readers\".* FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") GROUP BY \"readers\".\"email\" HAVING (COUNT(\"books\".\"isbn\") = 2)")
-                XCTAssertEqual(sqlQueries[sqlQueries.count - 1], "SELECT \"libraries\".\"id\", \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IN (2)))")
+                XCTAssertEqual(sqlQueries[sqlQueries.count - 2], """
+                    SELECT "readers".* \
+                    FROM "readers" \
+                    LEFT JOIN "libraries" ON ("libraries"."id" = "readers"."libraryId") \
+                    LEFT JOIN "books" ON ("books"."libraryId" = "libraries"."id") \
+                    GROUP BY "readers"."email" \
+                    HAVING (COUNT("books"."isbn") = 2)
+                    """)
+                XCTAssertEqual(sqlQueries[sqlQueries.count - 1], """
+                    SELECT "libraries"."id", "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IN (2)))
+                    """) // TODO: is this JOIN useful? If not, remove it.
                 
                 assertMatch(graph, [
                     (["email": "craig@example.com", "libraryId": 2], [

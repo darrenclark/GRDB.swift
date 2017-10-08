@@ -21,7 +21,13 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                 .filter(Author.books.count > 0)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") > 0)")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "authors".* \
+                FROM "authors" \
+                LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                GROUP BY "authors"."id" \
+                HAVING (COUNT("books"."id") > 0)
+                """)
             
             assertMatch(graph, [
                 ["id": 2, "name": "J. M. Coetzee", "birthYear": 1940],
@@ -43,7 +49,14 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                     .filter(Author.books.count > 0)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") WHERE (\"authors\".\"birthYear\" >= 1900) GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") > 0)")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".* \
+                    FROM "authors" \
+                    LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    WHERE ("authors"."birthYear" >= 1900) \
+                    GROUP BY "authors"."id" \
+                    HAVING (COUNT("books"."id\") > 0)
+                    """)
                 
                 assertMatch(graph, [
                     ["id": 2, "name": "J. M. Coetzee", "birthYear": 1940],
@@ -58,7 +71,14 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                     .filter(Column("birthYear") >= 1900)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") WHERE (\"authors\".\"birthYear\" >= 1900) GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") > 0)")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".* \
+                    FROM "authors" \
+                    LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    WHERE ("authors"."birthYear" >= 1900) \
+                    GROUP BY "authors"."id" \
+                    HAVING (COUNT("books"."id") > 0)
+                    """)
                 
                 assertMatch(graph, [
                     ["id": 2, "name": "J. M. Coetzee", "birthYear": 1940],
@@ -73,7 +93,14 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                     .filter(Author.books.count > 0)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") > 0) ORDER BY \"authors\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".* \
+                    FROM "authors" \
+                    LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    GROUP BY "authors"."id" \
+                    HAVING (COUNT("books"."id") > 0) \
+                    ORDER BY "authors"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     ["id": 4, "name": "Kim Stanley Robinson", "birthYear": 1952],
@@ -89,7 +116,14 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                     .order(Column("name").desc)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") > 0) ORDER BY \"authors\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".* \
+                    FROM "authors" \
+                    LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                    GROUP BY "authors"."id" \
+                    HAVING (COUNT("books"."id") > 0) \
+                    ORDER BY "authors"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     ["id": 4, "name": "Kim Stanley Robinson", "birthYear": 1952],
@@ -111,7 +145,13 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                     .filter(Author.books.filter(Column("year") >= 2000).count > 0)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON ((\"books\".\"authorId\" = \"authors\".\"id\") AND (\"books\".\"year\" >= 2000)) GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") > 0)")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "authors".* \
+                    FROM "authors" \
+                    LEFT JOIN "books" ON (("books"."authorId" = "authors"."id") AND ("books"."year" >= 2000)) \
+                    GROUP BY "authors"."id" \
+                    HAVING (COUNT("books"."id") > 0)
+                    """)
                 
                 assertMatch(graph, [
                     ["id": 2, "name": "J. M. Coetzee", "birthYear": 1940],
@@ -130,7 +170,13 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                 .filter(Author.books.count == 1)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") = 1)")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "authors".* \
+                FROM "authors" \
+                LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                GROUP BY "authors"."id" \
+                HAVING (COUNT("books"."id") = 1)
+                """)
             
             assertMatch(graph, [
                 ["id": 3, "name": "Herman Melville", "birthYear": 1819],
@@ -147,7 +193,13 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                 .filter(Author.books.isEmpty)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") = 0)")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "authors".* \
+                FROM "authors" \
+                LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                GROUP BY "authors"."id" \
+                HAVING (COUNT("books"."id") = 0)
+                """)
             
             assertMatch(graph, [
                 ["id": 1, "name": "Gwendal Roué", "birthYear": 1973],
@@ -164,7 +216,13 @@ class HasManyAnnotationPredicateRequestTests: GRDBTestCase {
                 .filter(!Author.books.isEmpty)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"authors\".* FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" HAVING (COUNT(\"books\".\"id\") <> 0)")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "authors".* \
+                FROM "authors" \
+                LEFT JOIN "books" ON ("books"."authorId" = "authors"."id") \
+                GROUP BY "authors"."id" \
+                HAVING (COUNT("books"."id") <> 0)
+                """)
             
             assertMatch(graph, [
                 ["id": 2, "name": "J. M. Coetzee", "birthYear": 1940],

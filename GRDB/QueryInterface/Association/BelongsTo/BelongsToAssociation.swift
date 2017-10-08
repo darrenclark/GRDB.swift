@@ -34,7 +34,7 @@ extension TableMapping {
         return BelongsToAssociation(joinMappingRequest: joinMappingRequest, rightRequest: Right.all())
     }
     
-    public static func belongsTo<Right>(_ right: Right.Type, from originColumns: String...) -> BelongsToAssociation<Self, Right> where Right: TableMapping {
+    public static func belongsTo<Right>(_ right: Right.Type, foreignKey originColumns: [String]) -> BelongsToAssociation<Self, Right> where Right: TableMapping {
         let joinMappingRequest = JoinMappingRequest(
             originTable: databaseTableName,
             destinationTable: Right.databaseTableName,
@@ -42,7 +42,7 @@ extension TableMapping {
         return BelongsToAssociation(joinMappingRequest: joinMappingRequest, rightRequest: Right.all())
     }
     
-    public static func belongsTo<Right>(_ right: Right.Type, from originColumns: [String], to destinationColumns: [String]) -> BelongsToAssociation<Self, Right> where Right: TableMapping {
+    public static func belongsTo<Right>(_ right: Right.Type, foreignKey originColumns: [String], to destinationColumns: [String]) -> BelongsToAssociation<Self, Right> where Right: TableMapping {
         let joinMappingRequest = JoinMappingRequest(
             originTable: databaseTableName,
             destinationTable: Right.databaseTableName,

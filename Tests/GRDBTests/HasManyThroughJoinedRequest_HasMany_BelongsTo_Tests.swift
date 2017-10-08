@@ -23,7 +23,12 @@ class HasManyThroughJoinedRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                 .joined(with: Country.citizens)
                 .fetchAll(db)
             
-            assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"persons\".* FROM \"countries\" JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\")")
+            assertEqualSQL(lastSQLQuery, """
+                SELECT "countries".*, "persons".* \
+                FROM "countries" \
+                JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                JOIN "persons" ON ("persons"."id" = "citizenships"."personId")
+                """)
             
             assertMatch(graph, [
                 (["code": "FR", "name": "France"], ["id": 1, "name": "Arthur"]),
@@ -46,7 +51,13 @@ class HasManyThroughJoinedRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .joined(with: Country.citizens)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"persons\".* FROM \"countries\" JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") WHERE (\"countries\".\"code\" <> 'FR')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "persons".* \
+                    FROM "countries" \
+                    JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    WHERE ("countries"."code" <> 'FR')
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 2, "name": "Barbara"]),
@@ -61,7 +72,13 @@ class HasManyThroughJoinedRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .filter(Column("code") != "FR")
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"persons\".* FROM \"countries\" JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") WHERE (\"countries\".\"code\" <> 'FR')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "persons".* \
+                    FROM "countries" \
+                    JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    WHERE ("countries"."code" <> 'FR')
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 2, "name": "Barbara"]),
@@ -76,7 +93,13 @@ class HasManyThroughJoinedRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .joined(with: Country.citizens)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"persons\".* FROM \"countries\" JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") ORDER BY \"countries\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "persons".* \
+                    FROM "countries" \
+                    JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    ORDER BY "countries"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 2, "name": "Barbara"]),
@@ -93,7 +116,13 @@ class HasManyThroughJoinedRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .order(Column("name").desc)
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"persons\".* FROM \"countries\" JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") ORDER BY \"countries\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "persons".* \
+                    FROM "countries" \
+                    JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    ORDER BY "countries"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 2, "name": "Barbara"]),
@@ -116,7 +145,12 @@ class HasManyThroughJoinedRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .joined(with: Country.citizens.filter(Column("name") != "Craig"))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"persons\".* FROM \"countries\" JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") JOIN \"persons\" ON ((\"persons\".\"id\" = \"citizenships\".\"personId\") AND (\"persons\".\"name\" <> 'Craig'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "persons".* \
+                    FROM "countries" \
+                    JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    JOIN "persons" ON (("persons"."id" = "citizenships"."personId") AND ("persons"."name" <> 'Craig'))
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "FR", "name": "France"], ["id": 1, "name": "Arthur"]),
@@ -131,7 +165,13 @@ class HasManyThroughJoinedRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
                     .joined(with: Country.citizens.order(Column("name").desc))
                     .fetchAll(db)
                 
-                assertEqualSQL(lastSQLQuery, "SELECT \"countries\".*, \"persons\".* FROM \"countries\" JOIN \"citizenships\" ON (\"citizenships\".\"countryCode\" = \"countries\".\"code\") JOIN \"persons\" ON (\"persons\".\"id\" = \"citizenships\".\"personId\") ORDER BY \"persons\".\"name\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "countries".*, "persons".* \
+                    FROM "countries" \
+                    JOIN "citizenships" ON ("citizenships"."countryCode" = "countries"."code") \
+                    JOIN "persons" ON ("persons"."id" = "citizenships"."personId") \
+                    ORDER BY "persons"."name" DESC
+                    """)
                 
                 assertMatch(graph, [
                     (["code": "US", "name": "United States"], ["id": 3, "name": "Craig"]),

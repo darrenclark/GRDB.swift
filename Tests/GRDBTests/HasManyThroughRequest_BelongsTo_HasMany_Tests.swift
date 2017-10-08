@@ -24,7 +24,11 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 let reader = try Reader.fetchOne(db, key: "arthur@example.com")!
                 let request = reader.all(Reader.books)
                 let books = try request.fetchAll(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IS NULL))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IS NULL))
+                    """)
                 XCTAssertTrue(books.isEmpty)
             }
             
@@ -32,7 +36,11 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 let reader = try Reader.fetchOne(db, key: "barbara@example.com")!
                 let request = reader.all(Reader.books)
                 let books = try request.fetchAll(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 1))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 1))
+                    """)
                 assertMatch(books, [
                     ["isbn": "book2", "title": "The Fellowship of the Ring", "libraryId": 1],
                     ["isbn": "book3", "title": "Walden", "libraryId": 1],
@@ -44,7 +52,11 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 let reader = try Reader.fetchOne(db, key: "craig@example.com")!
                 let request = reader.all(Reader.books)
                 let books = try request.fetchAll(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 2))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 2))
+                    """)
                 assertMatch(books, [
                     ["isbn": "book5", "title": "Querelle de Brest", "libraryId": 2],
                     ["isbn": "book6", "title": "Eden, Eden, Eden", "libraryId": 2],
@@ -55,7 +67,11 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 let reader = try Reader.fetchOne(db, key: "eve@example.com")!
                 let request = reader.all(Reader.books)
                 let books = try request.fetchAll(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 3))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 3))
+                    """)
                 XCTAssertTrue(books.isEmpty)
             }
             
@@ -63,7 +79,12 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 let reader = try Reader.fetchOne(db, key: "barbara@example.com")!
                 let request = reader.all(Reader.books).filter(Column("title") != "Walden")
                 let books = try request.fetchAll(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 1)) WHERE (\"books\".\"title\" <> \'Walden\')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 1)) \
+                    WHERE ("books"."title" <> 'Walden')
+                    """)
                 assertMatch(books, [
                     ["isbn": "book2", "title": "The Fellowship of the Ring", "libraryId": 1],
                     ["isbn": "book4", "title": "Le Comte de Monte-Cristo", "libraryId": 1],
@@ -74,7 +95,12 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
                 let reader = try Reader.fetchOne(db, key: "barbara@example.com")!
                 let request = reader.all(Reader.books).order(Column("title").desc)
                 let books = try request.fetchAll(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 1)) ORDER BY \"books\".\"title\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 1)) \
+                    ORDER BY "books"."title" DESC
+                    """)
                 assertMatch(books, [
                     ["isbn": "book3", "title": "Walden", "libraryId": 1],
                     ["isbn": "book2", "title": "The Fellowship of the Ring", "libraryId": 1],
@@ -93,14 +119,22 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
             do {
                 let reader = try Reader.fetchOne(db, key: "arthur@example.com")!
                 let books = try reader.fetchAll(db, Reader.books)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" IS NULL))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" IS NULL))
+                    """)
                 XCTAssertTrue(books.isEmpty)
             }
             
             do {
                 let reader = try Reader.fetchOne(db, key: "barbara@example.com")!
                 let books = try reader.fetchAll(db, Reader.books)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 1))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 1))
+                    """)
                 assertMatch(books, [
                     ["isbn": "book2", "title": "The Fellowship of the Ring", "libraryId": 1],
                     ["isbn": "book3", "title": "Walden", "libraryId": 1],
@@ -111,7 +145,11 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
             do {
                 let reader = try Reader.fetchOne(db, key: "craig@example.com")!
                 let books = try reader.fetchAll(db, Reader.books)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 2))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 2))
+                    """)
                 assertMatch(books, [
                     ["isbn": "book5", "title": "Querelle de Brest", "libraryId": 2],
                     ["isbn": "book6", "title": "Eden, Eden, Eden", "libraryId": 2],
@@ -121,14 +159,23 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
             do {
                 let reader = try Reader.fetchOne(db, key: "eve@example.com")!
                 let books = try reader.fetchAll(db, Reader.books)
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 3))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 3))
+                    """)
                 XCTAssertTrue(books.isEmpty)
             }
             
             do {
                 let reader = try Reader.fetchOne(db, key: "barbara@example.com")!
                 let books = try reader.fetchAll(db, Reader.books.filter(Column("title") != "Walden"))
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 1)) WHERE (\"books\".\"title\" <> \'Walden\')")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 1)) \
+                    WHERE ("books"."title" <> 'Walden')
+                    """)
                 assertMatch(books, [
                     ["isbn": "book2", "title": "The Fellowship of the Ring", "libraryId": 1],
                     ["isbn": "book4", "title": "Le Comte de Monte-Cristo", "libraryId": 1],
@@ -138,7 +185,12 @@ class HasManyThroughRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
             do {
                 let reader = try Reader.fetchOne(db, key: "barbara@example.com")!
                 let books = try reader.fetchAll(db, Reader.books.order(Column("title").desc))
-                assertEqualSQL(lastSQLQuery, "SELECT \"books\".* FROM \"books\" JOIN \"libraries\" ON ((\"libraries\".\"id\" = \"books\".\"libraryId\") AND (\"libraries\".\"id\" = 1)) ORDER BY \"books\".\"title\" DESC")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "books".* \
+                    FROM "books" \
+                    JOIN "libraries" ON (("libraries"."id" = "books"."libraryId") AND ("libraries"."id" = 1)) \
+                    ORDER BY "books"."title" DESC
+                    """)
                 assertMatch(books, [
                     ["isbn": "book3", "title": "Walden", "libraryId": 1],
                     ["isbn": "book2", "title": "The Fellowship of the Ring", "libraryId": 1],

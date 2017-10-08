@@ -21,7 +21,11 @@ class HasOneOptionalThroughRequest_HasOne_BelongsToOptional_Tests: GRDBTestCase 
                 let country = try Country.fetchOne(db, key: "FR")!
                 let request = country.request(Country.optionalContinent)
                 let continent = try request.fetchOne(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"continents\".* FROM \"continents\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"continents\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'FR\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "continents".* \
+                    FROM "continents" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "continents"."id") AND ("countryProfiles"."countryCode" = 'FR'))
+                    """)
                 assertMatch(continent, ["id": 1, "name": "Europe"])
             }
             
@@ -29,7 +33,11 @@ class HasOneOptionalThroughRequest_HasOne_BelongsToOptional_Tests: GRDBTestCase 
                 let country = try Country.fetchOne(db, key: "US")!
                 let request = country.request(Country.optionalContinent)
                 let continent = try request.fetchOne(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"continents\".* FROM \"continents\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"continents\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'US\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "continents".* \
+                    FROM "continents" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "continents"."id") AND ("countryProfiles"."countryCode" = 'US'))
+                    """)
                 assertMatch(continent, ["id": 2, "name": "America"])
             }
             
@@ -37,7 +45,11 @@ class HasOneOptionalThroughRequest_HasOne_BelongsToOptional_Tests: GRDBTestCase 
                 let country = try Country.fetchOne(db, key: "MX")!
                 let request = country.request(Country.optionalContinent)
                 let continent = try request.fetchOne(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"continents\".* FROM \"continents\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"continents\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'MX\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "continents".* \
+                    FROM "continents" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "continents"."id") AND ("countryProfiles"."countryCode" = 'MX'))
+                    """)
                 XCTAssertNil(continent)
             }
             
@@ -45,7 +57,11 @@ class HasOneOptionalThroughRequest_HasOne_BelongsToOptional_Tests: GRDBTestCase 
                 let country = try Country.fetchOne(db, key: "AA")!
                 let request = country.request(Country.optionalContinent)
                 let continent = try request.fetchOne(db)
-                assertEqualSQL(lastSQLQuery, "SELECT \"continents\".* FROM \"continents\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"continents\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'AA\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "continents".* \
+                    FROM "continents" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "continents"."id") AND ("countryProfiles"."countryCode" = 'AA'))
+                    """)
                 XCTAssertNil(continent)
             }
         }
@@ -59,28 +75,44 @@ class HasOneOptionalThroughRequest_HasOne_BelongsToOptional_Tests: GRDBTestCase 
             do {
                 let country = try Country.fetchOne(db, key: "FR")!
                 let continent = try country.fetchOne(db, Country.optionalContinent)
-                assertEqualSQL(lastSQLQuery, "SELECT \"continents\".* FROM \"continents\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"continents\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'FR\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "continents".* \
+                    FROM "continents" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "continents"."id") AND ("countryProfiles"."countryCode" = 'FR'))
+                    """)
                 assertMatch(continent, ["id": 1, "name": "Europe"])
             }
             
             do {
                 let country = try Country.fetchOne(db, key: "US")!
                 let continent = try country.fetchOne(db, Country.optionalContinent)
-                assertEqualSQL(lastSQLQuery, "SELECT \"continents\".* FROM \"continents\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"continents\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'US\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "continents".* \
+                    FROM "continents" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "continents"."id") AND ("countryProfiles"."countryCode" = 'US'))
+                    """)
                 assertMatch(continent, ["id": 2, "name": "America"])
             }
             
             do {
                 let country = try Country.fetchOne(db, key: "MX")!
                 let continent = try country.fetchOne(db, Country.optionalContinent)
-                assertEqualSQL(lastSQLQuery, "SELECT \"continents\".* FROM \"continents\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"continents\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'MX\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "continents".* \
+                    FROM "continents" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "continents"."id") AND ("countryProfiles"."countryCode" = 'MX'))
+                    """)
                 XCTAssertNil(continent)
             }
             
             do {
                 let country = try Country.fetchOne(db, key: "AA")!
                 let continent = try country.fetchOne(db, Country.optionalContinent)
-                assertEqualSQL(lastSQLQuery, "SELECT \"continents\".* FROM \"continents\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"continents\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'AA\'))")
+                assertEqualSQL(lastSQLQuery, """
+                    SELECT "continents".* \
+                    FROM "continents" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "continents"."id") AND ("countryProfiles"."countryCode" = 'AA'))
+                    """)
                 XCTAssertNil(continent)
             }
         }
@@ -105,11 +137,15 @@ class HasOneOptionalThroughRequest_HasOne_BelongsToOptional_Tests: GRDBTestCase 
         
         try dbQueue.inDatabase { db in
             do {
-                let middleAssociation = Person.hasOne(Person.self, from: "childId")
-                let rightAssociation = Person.belongsTo(optional: Person.self, from: "parentId")
+                let middleAssociation = Person.hasOne(Person.self, foreignKey: ["childId"])
+                let rightAssociation = Person.belongsTo(optional: Person.self, foreignKey: ["parentId"])
                 let association = Person.hasOne(optional: rightAssociation, through: middleAssociation)
                 let request = Person().request(association)
-                try assertEqualSQL(db, request, "SELECT \"persons2\".* FROM \"persons\" \"persons2\" JOIN \"persons\" \"persons1\" ON ((\"persons1\".\"parentId\" = \"persons2\".\"id\") AND (\"persons1\".\"childId\" = 1))")
+                try assertEqualSQL(db, request, """
+                    SELECT "persons2".* \
+                    FROM "persons" "persons2" \
+                    JOIN "persons" "persons1" ON (("persons1"."parentId" = "persons2"."id") AND ("persons1"."childId" = 1))
+                    """)
             }
         }
     }
@@ -123,14 +159,22 @@ class HasOneOptionalThroughRequest_HasOne_BelongsToOptional_Tests: GRDBTestCase 
                 // alias first
                 let country = try Country.fetchOne(db, key: "FR")!
                 let request = country.request(Country.optionalContinent.aliased("a"))
-                try assertEqualSQL(db, request, "SELECT \"a\".* FROM \"continents\" \"a\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"a\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'FR\'))")
+                try assertEqualSQL(db, request, """
+                    SELECT "a".* \
+                    FROM "continents" "a" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "a"."id") AND ("countryProfiles"."countryCode" = 'FR'))
+                    """)
             }
             
             do {
                 // alias last
                 let country = try Country.fetchOne(db, key: "FR")!
                 let request = country.request(Country.optionalContinent).aliased("a")
-                try assertEqualSQL(db, request, "SELECT \"a\".* FROM \"continents\" \"a\" JOIN \"countryProfiles\" ON ((\"countryProfiles\".\"continentId\" = \"a\".\"id\") AND (\"countryProfiles\".\"countryCode\" = \'FR\'))")
+                try assertEqualSQL(db, request, """
+                    SELECT "a".* \
+                    FROM "continents" "a" \
+                    JOIN "countryProfiles" ON (("countryProfiles"."continentId" = "a"."id") AND ("countryProfiles"."countryCode" = 'FR'))
+                    """)
             }
         }
     }
