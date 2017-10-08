@@ -22,7 +22,7 @@ class HasManyThroughRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
 
             do {
                 let country = try Country.fetchOne(db, key: "FR")!
-                let request = country.request(Country.citizens)
+                let request = country.all(Country.citizens)
                 let persons = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT \"persons\".* FROM \"persons\" JOIN \"citizenships\" ON ((\"citizenships\".\"personId\" = \"persons\".\"id\") AND (\"citizenships\".\"countryCode\" = \'FR\'))")
                 assertMatch(persons, [
@@ -33,7 +33,7 @@ class HasManyThroughRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
             
             do {
                 let country = try Country.fetchOne(db, key: "US")!
-                let request = country.request(Country.citizens)
+                let request = country.all(Country.citizens)
                 let persons = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT \"persons\".* FROM \"persons\" JOIN \"citizenships\" ON ((\"citizenships\".\"personId\" = \"persons\".\"id\") AND (\"citizenships\".\"countryCode\" = \'US\'))")
                 assertMatch(persons, [
@@ -44,7 +44,7 @@ class HasManyThroughRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
             
             do {
                 let country = try Country.fetchOne(db, key: "DE")!
-                let request = country.request(Country.citizens)
+                let request = country.all(Country.citizens)
                 let persons = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT \"persons\".* FROM \"persons\" JOIN \"citizenships\" ON ((\"citizenships\".\"personId\" = \"persons\".\"id\") AND (\"citizenships\".\"countryCode\" = \'DE\'))")
                 XCTAssertTrue(persons.isEmpty)
@@ -52,7 +52,7 @@ class HasManyThroughRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
             
             do {
                 let country = try Country.fetchOne(db, key: "US")!
-                let request = country.request(Country.citizens).filter(Column("name") != "Craig")
+                let request = country.all(Country.citizens).filter(Column("name") != "Craig")
                 let persons = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT \"persons\".* FROM \"persons\" JOIN \"citizenships\" ON ((\"citizenships\".\"personId\" = \"persons\".\"id\") AND (\"citizenships\".\"countryCode\" = \'US\')) WHERE (\"persons\".\"name\" <> \'Craig\')")
                 assertMatch(persons, [
@@ -62,7 +62,7 @@ class HasManyThroughRequest_HasMany_BelongsTo_Tests: GRDBTestCase {
             
             do {
                 let country = try Country.fetchOne(db, key: "US")!
-                let request = country.request(Country.citizens).order(Column("name").desc)
+                let request = country.all(Country.citizens).order(Column("name").desc)
                 let persons = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT \"persons\".* FROM \"persons\" JOIN \"citizenships\" ON ((\"citizenships\".\"personId\" = \"persons\".\"id\") AND (\"citizenships\".\"countryCode\" = \'US\')) ORDER BY \"persons\".\"name\" DESC")
                 assertMatch(persons, [

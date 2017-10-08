@@ -64,17 +64,17 @@ extension HasManyThroughRequest : TypedRequest {
 }
 
 extension HasManyThroughAssociation where MiddleAssociation.LeftAssociated: MutablePersistable {
-    func request(from record: MiddleAssociation.LeftAssociated) -> HasManyThroughRequest<MiddleAssociation, RightAssociation> {
+    func all(from record: MiddleAssociation.LeftAssociated) -> HasManyThroughRequest<MiddleAssociation, RightAssociation> {
         return HasManyThroughRequest(record: record, association: self)
     }
 }
 
 extension MutablePersistable {
-    public func request<MiddleAssociation, RightAssociation>(_ association: HasManyThroughAssociation<MiddleAssociation, RightAssociation>)
+    public func all<MiddleAssociation, RightAssociation>(_ association: HasManyThroughAssociation<MiddleAssociation, RightAssociation>)
         -> HasManyThroughRequest<MiddleAssociation, RightAssociation>
         where MiddleAssociation.LeftAssociated == Self
     {
-        return association.request(from: self)
+        return association.all(from: self)
     }
     
     public func fetchCursor<MiddleAssociation, RightAssociation>(_ db: Database, _ association: HasManyThroughAssociation<MiddleAssociation, RightAssociation>) throws
@@ -82,7 +82,7 @@ extension MutablePersistable {
         where
         MiddleAssociation.LeftAssociated == Self
     {
-        return try association.request(from: self).fetchCursor(db)
+        return try association.all(from: self).fetchCursor(db)
     }
     
     public func fetchAll<MiddleAssociation, RightAssociation>(_ db: Database, _ association: HasManyThroughAssociation<MiddleAssociation, RightAssociation>) throws
@@ -91,7 +91,7 @@ extension MutablePersistable {
         MiddleAssociation.LeftAssociated == Self,
         RightAssociation.RightAssociated: RowConvertible
     {
-        return try association.request(from: self).fetchAll(db)
+        return try association.all(from: self).fetchAll(db)
     }
     
     public func fetchOne<MiddleAssociation, RightAssociation>(_ db: Database, _ association: HasManyThroughAssociation<MiddleAssociation, RightAssociation>) throws
@@ -100,6 +100,6 @@ extension MutablePersistable {
         MiddleAssociation.LeftAssociated == Self,
         RightAssociation.RightAssociated: RowConvertible
     {
-        return try association.request(from: self).fetchOne(db)
+        return try association.all(from: self).fetchOne(db)
     }
 }

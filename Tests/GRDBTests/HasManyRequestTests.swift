@@ -23,7 +23,7 @@ class HasManyRequestTests: GRDBTestCase {
 
             do {
                 let author = try Author.fetchOne(db, key: 2)!
-                let request = author.request(Author.books)
+                let request = author.all(Author.books)
                 let books = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT * FROM \"books\" WHERE (\"authorId\" = 2)")
                 assertMatch(books, [
@@ -34,7 +34,7 @@ class HasManyRequestTests: GRDBTestCase {
             
             do {
                 let author = try Author.fetchOne(db, key: 4)!
-                let request = author.request(Author.books)
+                let request = author.all(Author.books)
                 let books = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT * FROM \"books\" WHERE (\"authorId\" = 4)")
                 assertMatch(books, [
@@ -48,7 +48,7 @@ class HasManyRequestTests: GRDBTestCase {
             
             do {
                 let author = try Author.fetchOne(db, key: 1)!
-                let request = author.request(Author.books)
+                let request = author.all(Author.books)
                 let books = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT * FROM \"books\" WHERE (\"authorId\" = 1)")
                 XCTAssertTrue(books.isEmpty)
@@ -56,7 +56,7 @@ class HasManyRequestTests: GRDBTestCase {
             
             do {
                 let author = try Author.fetchOne(db, key: 4)!
-                let request = author.request(Author.books).filter(Column("year") < 2000)
+                let request = author.all(Author.books).filter(Column("year") < 2000)
                 let books = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT * FROM \"books\" WHERE ((\"year\" < 2000) AND (\"authorId\" = 4))")
                 assertMatch(books, [
@@ -68,7 +68,7 @@ class HasManyRequestTests: GRDBTestCase {
             
             do {
                 let author = try Author.fetchOne(db, key: 4)!
-                let request = author.request(Author.books).order(Column("title").desc)
+                let request = author.all(Author.books).order(Column("title").desc)
                 let books = try request.fetchAll(db)
                 assertEqualSQL(lastSQLQuery, "SELECT * FROM \"books\" WHERE (\"authorId\" = 4) ORDER BY \"title\" DESC")
                 assertMatch(books, [

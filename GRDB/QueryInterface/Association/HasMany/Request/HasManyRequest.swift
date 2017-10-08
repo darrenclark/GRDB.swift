@@ -30,36 +30,36 @@ extension HasManyRequest : TypedRequest {
 }
 
 extension HasManyAssociation where Left: MutablePersistable {
-    func request(from record: Left) -> HasManyRequest<Left, Right> {
+    func all(from record: Left) -> HasManyRequest<Left, Right> {
         return HasManyRequest(record: record, association: self)
     }
 }
 
 extension MutablePersistable {
-    public func request<Right>(_ association: HasManyAssociation<Self, Right>)
+    public func all<Right>(_ association: HasManyAssociation<Self, Right>)
         -> HasManyRequest<Self, Right>
     {
-        return association.request(from: self)
+        return association.all(from: self)
     }
     
     public func fetchCursor<Right>(_ db: Database, _ association: HasManyAssociation<Self, Right>) throws
         -> RecordCursor<Right>
         where Right: RowConvertible
     {
-        return try association.request(from: self).fetchCursor(db)
+        return try association.all(from: self).fetchCursor(db)
     }
     
     public func fetchAll<Right>(_ db: Database, _ association: HasManyAssociation<Self, Right>) throws
         -> [Right]
         where Right: RowConvertible
     {
-        return try association.request(from: self).fetchAll(db)
+        return try association.all(from: self).fetchAll(db)
     }
     
     public func fetchOne<Right>(_ db: Database, _ association: HasManyAssociation<Self, Right>) throws
         -> Right?
         where Right: RowConvertible
     {
-        return try association.request(from: self).fetchOne(db)
+        return try association.all(from: self).fetchOne(db)
     }
 }
