@@ -81,4 +81,9 @@ extension SQLExpressible where Self: SQLSelectable {
     public func count(distinct: Bool) -> SQLCount? {
         return sqlExpression.count(distinct: distinct)
     }
+    
+    /// [**Experimental**](http://github.com/groue/GRDB.swift#what-are-experimental-features)
+    public func numberOfColumns(_ db: Database) throws -> Int {
+        return 1
+    }
 }

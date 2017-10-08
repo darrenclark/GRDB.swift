@@ -13,6 +13,12 @@ public protocol SQLSelectable {
     
     /// [**Experimental**](http://github.com/groue/GRDB.swift#what-are-experimental-features)
     func count(distinct: Bool) -> SQLCount?
+    
+    /// [**Experimental**](http://github.com/groue/GRDB.swift#what-are-experimental-features)
+    func numberOfColumns(_ db: Database) throws -> Int
+    
+    /// [**Experimental**](http://github.com/groue/GRDB.swift#what-are-experimental-features)
+    func qualified(by qualifier: SQLSourceQualifier) -> Self
 }
 
 // MARK: - Counting

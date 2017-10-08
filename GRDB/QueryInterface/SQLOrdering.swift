@@ -29,6 +29,9 @@ public protocol SQLOrderingTerm {
     ///     orderingTerm.orderingTermSQL(&arguments) // "IFNULL(name, ?)"
     ///     arguments                                // ["Anonymous"]
     func orderingTermSQL(_ arguments: inout StatementArguments?) -> String
+    
+    /// [**Experimental**](http://github.com/groue/GRDB.swift#what-are-experimental-features)
+    func qualified(by qualifier: SQLSourceQualifier) -> Self
 }
 
 // MARK: - SQLOrdering
@@ -52,6 +55,15 @@ enum SQLOrdering : SQLOrderingTerm {
             return expression.expressionSQL(&arguments) + " ASC"
         case .desc(let expression):
             return expression.expressionSQL(&arguments) + " DESC"
+        }
+    }
+    
+    func qualified(by qualifier: SQLSourceQualifier) -> SQLOrdering {
+        switch self {
+        case .asc(let expression):
+            return .asc(expression.qualified(by: qualifier))
+        case .desc(let expression):
+            return .desc(expression.qualified(by: qualifier))
         }
     }
 }

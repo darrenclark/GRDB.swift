@@ -433,6 +433,15 @@ extension Row {
     public var databaseValues: LazyMapCollection<Row, DatabaseValue> {
         return lazy.map { $0.1 }
     }
+    
+    /// True if the row contains at least one non-null value.
+    public var containsNonNullValue: Bool {
+        return containsNonNullValue(at: IndexSet(0..<count))
+    }
+    
+    func containsNonNullValue(at indexes: IndexSet) -> Bool {
+        return impl.containsNonNullValue(at: indexes)
+    }
 }
 
 extension Row {
@@ -525,6 +534,13 @@ extension Row {
     
     // MARK: - Fetching From SelectStatement
     
+    /// TODO
+    static func fetchCursorWithLayout(_ statement: SelectStatement, arguments: StatementArguments? = nil, adapter: RowAdapter? = nil) throws -> (cursor: RowCursor, layout: RowLayout) {
+        let cursor = try fetchCursor(statement, arguments: arguments, adapter: adapter)
+        let layout: RowLayout = try adapter?.layoutedAdapter(from: statement).mapping ?? statement
+        return (cursor: cursor, layout: layout)
+    }
+    
     /// Returns a cursor over rows fetched from a prepared statement.
     ///
     ///     let statement = try db.makeSelectStatement("SELECT ...")
@@ -595,6 +611,12 @@ extension Row {
     
     // MARK: - Fetching From Request
     
+    /// TODO
+    static func fetchCursorWithLayout(_ db: Database, _ request: Request) throws -> (cursor: RowCursor, layout: RowLayout) {
+        let (statement, adapter) = try request.prepare(db)
+        return try fetchCursorWithLayout(statement, adapter: adapter)
+    }
+
     /// Returns a cursor over rows fetched from a fetch request.
     ///
     ///     let idColumn = Column("id")
@@ -866,6 +888,7 @@ public struct RowIndex : Comparable {
 protocol RowImpl {
     var count: Int { get }
     var isFetched: Bool { get }
+    func containsNonNullValue(at indexes: IndexSet) -> Bool // TODO: test
     func databaseValue(atUncheckedIndex index: Int) -> DatabaseValue
     func dataNoCopy(atUncheckedIndex index:Int) -> Data?
     func columnName(atUncheckedIndex index: Int) -> String
@@ -896,6 +919,10 @@ private struct ArrayRowImpl : RowImpl {
     
     var isFetched: Bool {
         return false
+    }
+    
+    func containsNonNullValue(at indexes: IndexSet) -> Bool {
+        return indexes.contains { !columns[$0].1.isNull }
     }
     
     func dataNoCopy(atUncheckedIndex index:Int) -> Data? {
@@ -948,6 +975,10 @@ private struct StatementCopyRowImpl : RowImpl {
     
     var isFetched: Bool {
         return true
+    }
+    
+    func containsNonNullValue(at indexes: IndexSet) -> Bool {
+        return indexes.contains { !dbValues[$0].isNull }
     }
     
     func dataNoCopy(atUncheckedIndex index:Int) -> Data? {
@@ -1009,6 +1040,16 @@ private struct StatementRowImpl : RowImpl {
         return true
     }
     
+    func containsNonNullValue(at indexes: IndexSet) -> Bool {
+        for index in indexes {
+            // Avoid extracting values, because this modifies the statement.
+            if sqlite3_column_type(sqliteStatement, Int32(index)) != SQLITE_NULL {
+                return true
+            }
+        }
+        return false
+    }
+    
     func dataNoCopy(atUncheckedIndex index:Int) -> Data? {
         guard sqlite3_column_type(sqliteStatement, Int32(index)) != SQLITE_NULL else {
             return nil
@@ -1058,6 +1099,10 @@ private struct EmptyRowImpl : RowImpl {
     }
     
     var isFetched: Bool {
+        return false
+    }
+    
+    func containsNonNullValue(at indexes: IndexSet) -> Bool {
         return false
     }
     

@@ -49,6 +49,15 @@ func GRDBPrecondition(_ condition: @autoclosure() -> Bool, _ message: @autoclosu
     }
 }
 
+func GRDBPreconditionFailure(_ message: @autoclosure() -> String = "", file: StaticString = #file, line: UInt = #line) -> Never {
+    /// Custom precondition function which aims at solving
+    /// https://bugs.swift.org/browse/SR-905 and
+    /// https://github.com/groue/GRDB.swift/issues/37
+    ///
+    /// TODO: remove this function when https://bugs.swift.org/browse/SR-905 is solved.
+    fatalError(message, file: file, line: line)
+}
+
 // Workaround Swift inconvenience around factory methods of non-final classes
 func cast<T, U>(_ value: T) -> U? {
     return value as? U

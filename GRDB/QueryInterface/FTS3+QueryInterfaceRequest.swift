@@ -12,13 +12,10 @@ extension QueryInterfaceRequest {
     /// If the search pattern is nil, the request does not match any
     /// database row.
     public func matching(_ pattern: FTS3Pattern?) -> QueryInterfaceRequest<T> {
-        switch query.source {
-        case .table(let name, let alias)?:
-            return filter(SQLExpressionBinary(.match, Column(alias ?? name), pattern ?? DatabaseValue.null))
-        default:
-            // Programmer error
+        guard let qualifiedName = query.source.qualifiedName else {
             fatalError("fts3 match requires a table")
         }
+        return filter(SQLExpressionBinary(.match, Column(qualifiedName), pattern ?? DatabaseValue.null))
     }
 }
 

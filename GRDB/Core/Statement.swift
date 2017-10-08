@@ -75,6 +75,10 @@ public class Statement {
     }
     
     deinit {
+        // TODO: finalize statements in the correct queue.
+        // We close databases in the correct queue in from SerializedDatabase.deinit
+        // But we don't take care of statements. See https://github.com/ccgus/fmdb/issues/553#issuecomment-308958835
+        // for more information.
         sqlite3_finalize(sqliteStatement)
     }
     

@@ -59,4 +59,9 @@ extension SQLCollatedExpression : SQLOrderingTerm {
     public func orderingTermSQL(_ arguments: inout StatementArguments?) -> String {
         return sqlExpression.orderingTermSQL(&arguments)
     }
+    
+    /// [**Experimental**](http://github.com/groue/GRDB.swift#what-are-experimental-features)
+    public func qualified(by qualifier: SQLSourceQualifier) -> SQLCollatedExpression {
+        return SQLCollatedExpression(expression.qualified(by: qualifier), collationName: collationName)
+    }
 }

@@ -115,4 +115,8 @@ struct SQLExpressionNot : SQLExpression {
     var negated: SQLExpression {
         return expression
     }
+    
+    func qualified(by qualifier: SQLSourceQualifier) -> SQLExpressionNot {
+        return SQLExpressionNot(expression.qualified(by: qualifier))
+    }
 }

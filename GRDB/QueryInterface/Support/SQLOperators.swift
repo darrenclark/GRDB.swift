@@ -14,6 +14,26 @@ extension SQLBinaryOperator {
     static let isNot = SQLBinaryOperator("IS NOT", negated: "IS")
 }
 
+/// TODO: is it equivalent to SQLite row value comparison?
+func == <T>(lhs: [T], rhs: RowValue) -> SQLExpression where T: SQLSpecificExpressible {
+    // TODO: test
+    // TODO: add func !=
+    // TODO: add reversed operator
+    GRDBPrecondition(lhs.count == rhs.count, "non matching count")
+    if lhs.isEmpty {
+        // TODO: throw a fatal error, or return true. This return false is weird.
+        return false.sqlExpression
+    }
+    return zip(lhs, rhs.dbValues).reduce(nil, { (expression: SQLExpression?, pair) in
+        let (column, dbValue) = pair
+        if let expression = expression {
+            return expression && (column == dbValue)
+        } else {
+            return (column == dbValue)
+        }
+    })!
+}
+
 // Outputs "x = y" or "x IS NULL"
 private func isEqual(_ lhs: SQLExpression, _ rhs: SQLExpression) -> SQLExpression {
     switch (lhs, rhs) {
