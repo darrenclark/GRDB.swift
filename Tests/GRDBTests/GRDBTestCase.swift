@@ -119,22 +119,9 @@ class GRDBTestCase: XCTestCase {
         XCTAssertTrue(sqlQueries.contains(sql), "Did not execute \(sql)")
     }
     
-    func assert(_ record: MutablePersistable, isEncodedIn row: Row) {
-        let recordContent = AnySequence({ PersistenceContainer(record).makeIterator() })
-        for (column, value) in recordContent {
-            if let dbValue: DatabaseValue = row[column] {
-                XCTAssertEqual(dbValue, value?.databaseValue ?? .null)
-            } else {
-                XCTFail("Missing column \(column) in fetched row")
-            }
-        }
-    }
-    
     // Compare SQL strings (ignoring leading and trailing white space and semicolons.
     func assertEqualSQL(_ lhs: String, _ rhs: String, file: StaticString = #file, line: UInt = #line) {
-        // Trim white space and ";"
-        let cs = CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: ";"))
-        XCTAssertEqual(lhs.trimmingCharacters(in: cs), rhs.trimmingCharacters(in: cs), file: file, line: line)
+        XCTAssertEqual(lhs.trimmedSQL, rhs.trimmedSQL, file: file, line: line)
     }
     
     // Compare SQL strings (ignoring leading and trailing white space and semicolons.
@@ -150,10 +137,69 @@ class GRDBTestCase: XCTestCase {
         }
     }
     
+    // TODO: refactor around assertEqualSQL
     func sql(_ databaseReader: DatabaseReader, _ request: Request) -> String {
         return try! databaseReader.unsafeRead { db in
             _ = try Row.fetchOne(db, request)
             return lastSQLQuery
         }
     }
+    
+    // TODO: rename along with assertMatch
+    func assert(_ record: MutablePersistable, isEncodedIn row: Row, file: StaticString = #file, line: UInt = #line) {
+        let recordContent = AnySequence({ PersistenceContainer(record).makeIterator() })
+        for (column, value) in recordContent {
+            if let dbValue: DatabaseValue = row[column] {
+                XCTAssertEqual(dbValue, value?.databaseValue ?? .null)
+            } else {
+                XCTFail("Missing column \(column) in fetched row")
+            }
+        }
+    }
+    
+    func assertMatch<T>(_ record: T?, _ expectedRow: Row?, file: StaticString = #file, line: UInt = #line) where T: MutablePersistable {
+        switch (record, expectedRow) {
+        case (let record?, let row?):
+            assert(record, isEncodedIn: row, file: file, line: line)
+        case (nil, nil):
+            break
+        default:
+            XCTFail("no match", file: file, line: line)
+        }
+    }
 }
+
+extension String {
+    // trim leading and trailing white space and semicolons
+    var trimmedSQL: String {
+        let cs = CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: ";"))
+        return trimmingCharacters(in: cs)
+    }
+}
+
+extension Array {
+    func decompose() -> (Iterator.Element, [Iterator.Element])? {
+        guard let x = first else { return nil }
+        return (x, Array(suffix(from: index(after: startIndex))))
+    }
+    
+    // https://gist.github.com/proxpero/9fd3c4726d19242365d6
+    var permutations: [[Iterator.Element]] {
+        func between(_ x: Iterator.Element, _ ys: [Iterator.Element]) -> [[Iterator.Element]] {
+            guard let (head, tail) = ys.decompose() else { return [[x]] }
+            return [[x] + ys] + between(x, tail).map { [head] + $0 }
+        }
+        guard let (head, tail) = decompose() else { return [[]] }
+        return tail.permutations.flatMap { between(head, $0) }
+    }
+}
+
+extension Array where Iterator.Element: DatabaseValueConvertible {
+    // [1, 2, 3].sqlPermutations => ["1, 2, 3", "1, 3, 2", "2, 1, 3", "2, 3, 1", "3, 1, 2", "3, 2, 1"]
+    var sqlPermutations: [String] {
+        return map { $0.databaseValue.sql }
+            .permutations
+            .map { $0.joined(separator: ", ") }
+    }
+}
+
