@@ -153,4 +153,28 @@ class HasManyThroughAnnotationRequest_BelongsTo_HasMany_Tests: GRDBTestCase {
             }
         }
     }
+    
+    func testOrdering() throws {
+        let dbQueue = try makeDatabaseQueue()
+        try HasManyThrough_BelongsTo_HasMany_Fixture().migrator.migrate(dbQueue)
+        
+        try dbQueue.inDatabase { db in
+            let graph = try Reader
+                .annotated(with: Reader.books.count.aliased("a"))
+                .order(sql: "a, email")
+                .fetchAll(db)
+            
+            // TODO: check request & results
+            assertEqualSQL(lastSQLQuery, "SELECT \"readers\".*, COUNT(\"books\".\"isbn\") AS \"a\" FROM \"readers\" LEFT JOIN \"libraries\" ON (\"libraries\".\"id\" = \"readers\".\"libraryId\") LEFT JOIN \"books\" ON (\"books\".\"libraryId\" = \"libraries\".\"id\") GROUP BY \"readers\".\"email\" ORDER BY a, email")
+            
+            assertMatch(graph, [
+                (["email": "arthur@example.com", "libraryId": nil], 0),
+                (["email": "eve@example.com", "libraryId": 3], 0),
+                (["email": "craig@example.com", "libraryId": 2], 2),
+                (["email": "david@example.com", "libraryId": 2], 2),
+                (["email": "barbara@example.com", "libraryId": 1], 3),
+                ])
+        }
+    }
+    
 }

@@ -5,7 +5,24 @@ public struct HasManyThroughAnnotation<MiddleAssociation, RightAssociation, Anno
     MiddleAssociation.RightAssociated == RightAssociation.LeftAssociated
 {
     let association: HasManyThroughAssociation<MiddleAssociation, RightAssociation>
+    let alias: String?
     let expression: (Database) throws -> SQLExpression
+    
+    func selection(_ db: Database) throws -> SQLSelectable {
+        let expression = try self.expression(db)
+        if let alias = alias {
+            return expression.aliased(alias)
+        } else {
+            return expression
+        }
+    }
+
+    public func aliased(_ alias: String) -> HasManyThroughAnnotation<MiddleAssociation, RightAssociation, Annotation> {
+        return HasManyThroughAnnotation(
+            association: association,
+            alias: alias,
+            expression: expression)
+    }
 }
 
 extension HasManyThroughAssociation {
@@ -16,6 +33,7 @@ extension HasManyThroughAssociation {
         }
         return HasManyThroughAnnotation(
             association: self,
+            alias: nil,
             expression: { db in
                 let primaryKey = try db.primaryKey(rightTable)
                 guard primaryKey.columns.count == 1 else {

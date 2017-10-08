@@ -299,7 +299,7 @@
 		5624B6841F89789D00A71416 /* HasManyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6421F88F6E100A71416 /* HasManyAnnotation.swift */; };
 		5624B6851F89789D00A71416 /* HasManyAnnotationPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6431F88F6E100A71416 /* HasManyAnnotationPredicate.swift */; };
 		5624B6861F89789D00A71416 /* HasManyAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6441F88F6E100A71416 /* HasManyAssociation.swift */; };
-		5624B6871F89789D00A71416 /* HasManyAnnotatedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */; };
+		5624B6871F89789D00A71416 /* HasManyAnnotationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */; };
 		5624B6881F89789D00A71416 /* HasManyAnnotationHavingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */; };
 		5624B6891F89789D00A71416 /* HasManyIncludingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */; };
 		5624B68A1F89789D00A71416 /* HasManyJoinedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */; };
@@ -345,7 +345,7 @@
 		5624B6E01F89789F00A71416 /* HasManyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6421F88F6E100A71416 /* HasManyAnnotation.swift */; };
 		5624B6E11F89789F00A71416 /* HasManyAnnotationPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6431F88F6E100A71416 /* HasManyAnnotationPredicate.swift */; };
 		5624B6E21F89789F00A71416 /* HasManyAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6441F88F6E100A71416 /* HasManyAssociation.swift */; };
-		5624B6E31F89789F00A71416 /* HasManyAnnotatedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */; };
+		5624B6E31F89789F00A71416 /* HasManyAnnotationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */; };
 		5624B6E41F89789F00A71416 /* HasManyAnnotationHavingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */; };
 		5624B6E51F89789F00A71416 /* HasManyIncludingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */; };
 		5624B6E61F89789F00A71416 /* HasManyJoinedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */; };
@@ -391,7 +391,7 @@
 		5624B70E1F8978A000A71416 /* HasManyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6421F88F6E100A71416 /* HasManyAnnotation.swift */; };
 		5624B70F1F8978A000A71416 /* HasManyAnnotationPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6431F88F6E100A71416 /* HasManyAnnotationPredicate.swift */; };
 		5624B7101F8978A000A71416 /* HasManyAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6441F88F6E100A71416 /* HasManyAssociation.swift */; };
-		5624B7111F8978A000A71416 /* HasManyAnnotatedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */; };
+		5624B7111F8978A000A71416 /* HasManyAnnotationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */; };
 		5624B7121F8978A000A71416 /* HasManyAnnotationHavingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */; };
 		5624B7131F8978A000A71416 /* HasManyIncludingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */; };
 		5624B7141F8978A000A71416 /* HasManyJoinedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */; };
@@ -437,7 +437,7 @@
 		5624B73C1F8978A100A71416 /* HasManyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6421F88F6E100A71416 /* HasManyAnnotation.swift */; };
 		5624B73D1F8978A100A71416 /* HasManyAnnotationPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6431F88F6E100A71416 /* HasManyAnnotationPredicate.swift */; };
 		5624B73E1F8978A100A71416 /* HasManyAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6441F88F6E100A71416 /* HasManyAssociation.swift */; };
-		5624B73F1F8978A100A71416 /* HasManyAnnotatedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */; };
+		5624B73F1F8978A100A71416 /* HasManyAnnotationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */; };
 		5624B7401F8978A100A71416 /* HasManyAnnotationHavingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */; };
 		5624B7411F8978A100A71416 /* HasManyIncludingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */; };
 		5624B7421F8978A100A71416 /* HasManyJoinedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */; };
@@ -483,7 +483,7 @@
 		5624B76A1F8978A200A71416 /* HasManyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6421F88F6E100A71416 /* HasManyAnnotation.swift */; };
 		5624B76B1F8978A200A71416 /* HasManyAnnotationPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6431F88F6E100A71416 /* HasManyAnnotationPredicate.swift */; };
 		5624B76C1F8978A200A71416 /* HasManyAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6441F88F6E100A71416 /* HasManyAssociation.swift */; };
-		5624B76D1F8978A200A71416 /* HasManyAnnotatedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */; };
+		5624B76D1F8978A200A71416 /* HasManyAnnotationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */; };
 		5624B76E1F8978A200A71416 /* HasManyAnnotationHavingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */; };
 		5624B76F1F8978A200A71416 /* HasManyIncludingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */; };
 		5624B7701F8978A200A71416 /* HasManyJoinedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */; };
@@ -529,7 +529,7 @@
 		5624B7981F8978A300A71416 /* HasManyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6421F88F6E100A71416 /* HasManyAnnotation.swift */; };
 		5624B7991F8978A300A71416 /* HasManyAnnotationPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6431F88F6E100A71416 /* HasManyAnnotationPredicate.swift */; };
 		5624B79A1F8978A300A71416 /* HasManyAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6441F88F6E100A71416 /* HasManyAssociation.swift */; };
-		5624B79B1F8978A300A71416 /* HasManyAnnotatedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */; };
+		5624B79B1F8978A300A71416 /* HasManyAnnotationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */; };
 		5624B79C1F8978A300A71416 /* HasManyAnnotationHavingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */; };
 		5624B79D1F8978A300A71416 /* HasManyIncludingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */; };
 		5624B79E1F8978A300A71416 /* HasManyJoinedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */; };
@@ -575,7 +575,7 @@
 		5624B7C61F8978A400A71416 /* HasManyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6421F88F6E100A71416 /* HasManyAnnotation.swift */; };
 		5624B7C71F8978A400A71416 /* HasManyAnnotationPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6431F88F6E100A71416 /* HasManyAnnotationPredicate.swift */; };
 		5624B7C81F8978A400A71416 /* HasManyAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6441F88F6E100A71416 /* HasManyAssociation.swift */; };
-		5624B7C91F8978A400A71416 /* HasManyAnnotatedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */; };
+		5624B7C91F8978A400A71416 /* HasManyAnnotationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */; };
 		5624B7CA1F8978A400A71416 /* HasManyAnnotationHavingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */; };
 		5624B7CB1F8978A400A71416 /* HasManyIncludingRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */; };
 		5624B7CC1F8978A400A71416 /* HasManyJoinedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */; };
@@ -2771,7 +2771,7 @@
 		5624B6421F88F6E100A71416 /* HasManyAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasManyAnnotation.swift; sourceTree = "<group>"; };
 		5624B6431F88F6E100A71416 /* HasManyAnnotationPredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasManyAnnotationPredicate.swift; sourceTree = "<group>"; };
 		5624B6441F88F6E100A71416 /* HasManyAssociation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasManyAssociation.swift; sourceTree = "<group>"; };
-		5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasManyAnnotatedRequest.swift; sourceTree = "<group>"; };
+		5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasManyAnnotationRequest.swift; sourceTree = "<group>"; };
 		5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasManyAnnotationHavingRequest.swift; sourceTree = "<group>"; };
 		5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasManyIncludingRequest.swift; sourceTree = "<group>"; };
 		5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasManyJoinedRequest.swift; sourceTree = "<group>"; };
@@ -3520,7 +3520,7 @@
 		5624B6451F88F6E100A71416 /* Request */ = {
 			isa = PBXGroup;
 			children = (
-				5624B6461F88F6E100A71416 /* HasManyAnnotatedRequest.swift */,
+				5624B6461F88F6E100A71416 /* HasManyAnnotationRequest.swift */,
 				5624B6471F88F6E100A71416 /* HasManyAnnotationHavingRequest.swift */,
 				5624B6481F88F6E100A71416 /* HasManyIncludingRequest.swift */,
 				5624B6491F88F6E100A71416 /* HasManyJoinedRequest.swift */,
@@ -5159,7 +5159,7 @@
 				560FC51C1CB003810014AA8E /* QueryInterfaceRequest.swift in Sources */,
 				5624B6DB1F89789F00A71416 /* BelongsToRequest.swift in Sources */,
 				560FC51D1CB003810014AA8E /* SQLCollatedExpression.swift in Sources */,
-				5624B6E31F89789F00A71416 /* HasManyAnnotatedRequest.swift in Sources */,
+				5624B6E31F89789F00A71416 /* HasManyAnnotationRequest.swift in Sources */,
 				56D1215B1ED34978001347D2 /* Fixits-0.109.0.swift in Sources */,
 				5624B6EB1F89789F00A71416 /* HasManyThroughAssociation.swift in Sources */,
 				566475D41D981D5E00FF74B8 /* SQLOperators.swift in Sources */,
@@ -5608,7 +5608,7 @@
 				565490D31D5AE252005622CB /* (null) in Sources */,
 				566475D91D981D5E00FF74B8 /* SQLOperators.swift in Sources */,
 				5624B7D91F8978A400A71416 /* HasOneIncludingRequest.swift in Sources */,
-				5624B7C91F8978A400A71416 /* HasManyAnnotatedRequest.swift in Sources */,
+				5624B7C91F8978A400A71416 /* HasManyAnnotationRequest.swift in Sources */,
 				565490DE1D5AE252005622CB /* QueryInterfaceSelectQueryDefinition.swift in Sources */,
 				5624B7E71F8978A400A71416 /* HasOneThroughRequest.swift in Sources */,
 				56F5ABDD1D814330001F60CB /* UUID.swift in Sources */,
@@ -5859,7 +5859,7 @@
 				56AFC9F11CB1A8BB00F48B96 /* QueryInterfaceRequest.swift in Sources */,
 				5624B7651F8978A200A71416 /* BelongsToRequest.swift in Sources */,
 				56AFC9F21CB1A8BB00F48B96 /* SQLCollatedExpression.swift in Sources */,
-				5624B76D1F8978A200A71416 /* HasManyAnnotatedRequest.swift in Sources */,
+				5624B76D1F8978A200A71416 /* HasManyAnnotationRequest.swift in Sources */,
 				56D1215E1ED34978001347D2 /* Fixits-0.109.0.swift in Sources */,
 				5624B7751F8978A200A71416 /* HasManyThroughAssociation.swift in Sources */,
 				566475D71D981D5E00FF74B8 /* SQLOperators.swift in Sources */,
@@ -6385,7 +6385,7 @@
 				56CEB5481EAA359A00BFAF62 /* Column.swift in Sources */,
 				5624B7411F8978A100A71416 /* HasManyIncludingRequest.swift in Sources */,
 				5605F1641C672E4000235C62 /* Date.swift in Sources */,
-				5624B73F1F8978A100A71416 /* HasManyAnnotatedRequest.swift in Sources */,
+				5624B73F1F8978A100A71416 /* HasManyAnnotationRequest.swift in Sources */,
 				5624B74B1F8978A100A71416 /* HasManyThroughJoinedRequest.swift in Sources */,
 				5605F1721C672E4000235C62 /* DatabaseValueConvertible+RawRepresentable.swift in Sources */,
 				5624B75A1F8978A100A71416 /* HasOneThroughAssociation.swift in Sources */,
@@ -6898,7 +6898,7 @@
 				56300B781C53F592005A543B /* QueryInterfaceRequest.swift in Sources */,
 				5624B67F1F89789D00A71416 /* BelongsToRequest.swift in Sources */,
 				5605F18D1C6B1A8700235C62 /* SQLCollatedExpression.swift in Sources */,
-				5624B6871F89789D00A71416 /* HasManyAnnotatedRequest.swift in Sources */,
+				5624B6871F89789D00A71416 /* HasManyAnnotationRequest.swift in Sources */,
 				56D1215A1ED34978001347D2 /* Fixits-0.109.0.swift in Sources */,
 				5624B68F1F89789D00A71416 /* HasManyThroughAssociation.swift in Sources */,
 				566475D31D981D5E00FF74B8 /* SQLOperators.swift in Sources */,
@@ -7036,7 +7036,7 @@
 				56BB6EAE1D3009B100A1CA52 /* SchedulingWatchdog.swift in Sources */,
 				5624B7931F8978A300A71416 /* BelongsToRequest.swift in Sources */,
 				F3BA801A1CFB2876003DC1BA /* StatementColumnConvertible.swift in Sources */,
-				5624B79B1F8978A300A71416 /* HasManyAnnotatedRequest.swift in Sources */,
+				5624B79B1F8978A300A71416 /* HasManyAnnotationRequest.swift in Sources */,
 				56D1215F1ED34978001347D2 /* Fixits-0.109.0.swift in Sources */,
 				5624B7A31F8978A300A71416 /* HasManyThroughAssociation.swift in Sources */,
 				566475D81D981D5E00FF74B8 /* SQLOperators.swift in Sources */,
@@ -7365,7 +7365,7 @@
 				56BB6EAB1D3009B100A1CA52 /* SchedulingWatchdog.swift in Sources */,
 				5624B7091F8978A000A71416 /* BelongsToRequest.swift in Sources */,
 				F3BA80761CFB2E55003DC1BA /* StatementColumnConvertible.swift in Sources */,
-				5624B7111F8978A000A71416 /* HasManyAnnotatedRequest.swift in Sources */,
+				5624B7111F8978A000A71416 /* HasManyAnnotationRequest.swift in Sources */,
 				56D1215C1ED34978001347D2 /* Fixits-0.109.0.swift in Sources */,
 				5624B7191F8978A000A71416 /* HasManyThroughAssociation.swift in Sources */,
 				566475D51D981D5E00FF74B8 /* SQLOperators.swift in Sources */,

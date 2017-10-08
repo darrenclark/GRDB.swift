@@ -149,4 +149,26 @@ class HasManyAnnotationRequestTests: GRDBTestCase {
             }
         }
     }
+    
+    func testOrdering() throws {
+        let dbQueue = try makeDatabaseQueue()
+        try AssociationFixture().migrator.migrate(dbQueue)
+        
+        try dbQueue.inDatabase { db in
+            let graph = try Author
+                .annotated(with: Author.books.count.aliased("a"))
+                .order(sql: "a")
+                .fetchAll(db)
+            
+            // TODO: check request & results
+            assertEqualSQL(lastSQLQuery, "SELECT \"authors\".*, COUNT(\"books\".\"id\") AS \"a\" FROM \"authors\" LEFT JOIN \"books\" ON (\"books\".\"authorId\" = \"authors\".\"id\") GROUP BY \"authors\".\"id\" ORDER BY a")
+            
+            assertMatch(graph, [
+                (["id": 1, "name": "Gwendal Roué", "birthYear": 1973], 0),
+                (["id": 3, "name": "Herman Melville", "birthYear": 1819], 1),
+                (["id": 2, "name": "J. M. Coetzee", "birthYear": 1940], 2),
+                (["id": 4, "name": "Kim Stanley Robinson", "birthYear": 1952], 5),
+                ])
+        }
+    }
 }

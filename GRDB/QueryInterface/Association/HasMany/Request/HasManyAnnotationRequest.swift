@@ -28,7 +28,7 @@ extension HasManyAnnotationRequest : TypedRequest {
         try [leftQualifier, rightQualifier].resolveAmbiguities()
 
         // SELECT left.*, right.annotation
-        let joinedSelection = try leftQuery.selection + [annotation.expression(db).qualified(by: rightQualifier)]
+        let joinedSelection = try leftQuery.selection + [annotation.selection(db).qualified(by: rightQualifier)]
         
         // ... FROM left LEFT JOIN right
         let joinedSource = try leftQuery.source.join(

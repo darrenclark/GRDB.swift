@@ -3,7 +3,24 @@ public struct HasManyAnnotation<Left, Right, Annotation> where
     Right: TableMapping
 {
     let association: HasManyAssociation<Left, Right>
+    let alias: String?
     let expression: (Database) throws -> SQLExpression
+    
+    func selection(_ db: Database) throws -> SQLSelectable {
+        let expression = try self.expression(db)
+        if let alias = alias {
+            return expression.aliased(alias)
+        } else {
+            return expression
+        }
+    }
+    
+    public func aliased(_ alias: String) -> HasManyAnnotation<Left, Right, Annotation> {
+        return HasManyAnnotation(
+            association: association,
+            alias: alias,
+            expression: expression)
+    }
 }
 
 extension HasManyAssociation {
@@ -14,6 +31,7 @@ extension HasManyAssociation {
         }
         return HasManyAnnotation(
             association: self,
+            alias: nil,
             expression: { db in
                 let primaryKey = try db.primaryKey(rightTable)
                 guard primaryKey.columns.count == 1 else {

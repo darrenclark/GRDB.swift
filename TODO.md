@@ -15,11 +15,11 @@
 
 Associations
 
-- [ ] has_many :through
-- [ ] has_one :through
+- [X] has_many :through
+- [X] has_one :through
 - [ ] has_and_belongs_to_many
 - [ ] Recursive associations (A -> A, and A -> B, B -> A)
-- [ ] .order(annotation.count) -> this one will probably need SQL ordering
+- [X] .order(annotation.count) -> this one will probably need SQL ordering
 - [ ] FTS4/5 External Content Full-Text Tables
 - [ ] Author.deleteAll(Author.books)
 - [ ] Refactor requests so that:
